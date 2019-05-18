@@ -5,7 +5,8 @@ if(createjs.Touch.isSupported() == true){
     createjs.Touch.enable(stage)
 }
 
-const stage_width = 300
+// 横幅は3列, 4列どちらも対応するためどちらでも割れる数とする
+const stage_width = 12 * 30
 const stage_height = 600
 
 // 背景：枠線
@@ -121,24 +122,34 @@ let mid_group = new DancerGroup("mid_group", Color.mediumaquamarine)
 let back_group = new DancerGroup("back_group", Color.skyblue)
 dancerGroups.push(front_group, mid_group, back_group)
 
-front_group.set(new Dancer(1, "れいま", 50, 50, stage_width, stage_height))
-front_group.set(new Dancer(2, "ふじもん", 150, 50, stage_width, stage_height))
-front_group.set(new Dancer(3, "りょうご", 250, 50, stage_width, stage_height))
-front_group.set(new Dancer(4, "ちぇる", 50, 100, stage_width, stage_height))
-front_group.set(new Dancer(5, "レイバン", 150, 100, stage_width, stage_height))
-front_group.set(new Dancer(6, "くー", 250, 100, stage_width, stage_height))
+// 並び位置
+const three_column_left = stage_width / 12 * 2;
+const three_column_mid = stage_width / 12 * 6;
+const three_column_right = stage_width / 12 * 10;
+const two_column_left = stage_width / 12 * 4
+const two_column_right = stage_width / 12 * 8
 
-mid_group.set(new Dancer(8, "まさ", 100, 175, stage_width, stage_height))
-mid_group.set(new Dancer(9, "純", 200, 175, stage_width, stage_height))
-mid_group.set(new Dancer(10, "まり", 100, 225, stage_width, stage_height))
-mid_group.set(new Dancer(11, "びー", 200, 225, stage_width, stage_height))
+// front_groupは3列で並ぶ
+front_group.set(new Dancer(1, "れいま", three_column_left, 50, stage_width, stage_height))
+front_group.set(new Dancer(2, "ふじもん", three_column_mid, 50, stage_width, stage_height))
+front_group.set(new Dancer(3, "りょうご", three_column_right, 50, stage_width, stage_height))
+front_group.set(new Dancer(4, "ちぇる", three_column_left, 100, stage_width, stage_height))
+front_group.set(new Dancer(5, "レイバン", three_column_mid, 100, stage_width, stage_height))
+front_group.set(new Dancer(6, "くー", three_column_right, 100, stage_width, stage_height))
 
-back_group.set(new Dancer(12, "キャス", 50, 300, stage_width, stage_height))
-back_group.set(new Dancer(13, "きり", 150, 300, stage_width, stage_height))
-back_group.set(new Dancer(14, "なたり", 250, 300, stage_width, stage_height))
-back_group.set(new Dancer(15, "むーらん", 50, 350, stage_width, stage_height))
-back_group.set(new Dancer(16, "ねぎ", 150, 350, stage_width, stage_height))
-back_group.set(new Dancer(17, "きらら", 250, 350, stage_width, stage_height))
+// mid_groupは2列で並ぶ
+mid_group.set(new Dancer(8, "まさ", two_column_left, 175, stage_width, stage_height))
+mid_group.set(new Dancer(9, "純", two_column_right, 175, stage_width, stage_height))
+mid_group.set(new Dancer(10, "まり", two_column_left, 225, stage_width, stage_height))
+mid_group.set(new Dancer(11, "びー", two_column_right, 225, stage_width, stage_height))
+
+// back_gorupは3列で並ぶ
+back_group.set(new Dancer(12, "キャス", three_column_left, 300, stage_width, stage_height))
+back_group.set(new Dancer(13, "きり", three_column_mid, 300, stage_width, stage_height))
+back_group.set(new Dancer(14, "なたり", three_column_right, 300, stage_width, stage_height))
+back_group.set(new Dancer(15, "むーらん", three_column_left, 350, stage_width, stage_height))
+back_group.set(new Dancer(16, "ねぎ", three_column_mid, 350, stage_width, stage_height))
+back_group.set(new Dancer(17, "きらら", three_column_right, 350, stage_width, stage_height))
 
 dancerGroups.flatMap(group => group.dancers)
     .forEach(dancer => {

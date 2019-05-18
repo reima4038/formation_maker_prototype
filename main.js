@@ -16,6 +16,9 @@ stage.addChild(frame_border)
 // 踊り子
 class Dancer {
     container = new createjs.Container();
+    dragPointX = 0;
+    dragPointY = 0;
+
     constructor(number, name, x, y, stage_width, stage_height) {
         this.number = number
 
@@ -23,7 +26,9 @@ class Dancer {
         circle.graphics.beginFill("gray").drawCircle(x, y, 10)
         circle.cache(0, 0, stage_width, stage_height)
 
-        let nameText = new createjs.Text(name, "20px Arial", "brack")
+        let nameText = new createjs.Text(name, "10px Arial", "brack")
+        nameText.x = x - 5
+        nameText.y = y - 5
         nameText.cache(0, 0, stage_width, stage_height)
 
         const circleIndex = 0
@@ -31,6 +36,10 @@ class Dancer {
 
         this.container.addChildAt(circle, circleIndex)
         this.container.addChildAt(nameText, nameTextIndex)
+
+        this.container.addEventListener("mousedown", this.handleDown)
+        this.container.addEventListener("pressmove", this.handleMove)
+        this.container.addEventListener("pressup", this.handleUp)
     }
     setColor(color) {
         const circleIndex = 0
@@ -41,6 +50,18 @@ class Dancer {
         ]
         target.updateCache()
     }
+    handleDown = (event) => {
+        this.dragPointX = stage.mouseX - this.container.x
+        this.dragPointY = stage.mouseY - this.container.y
+    }
+    handleMove = (event) => {
+        this.container.x = stage.mouseX - this.dragPointX
+        this.container.y = stage.mouseY - this.dragPointY
+    }
+    handleUp = (event) => {
+
+    }
+
     get container() {
         return this.container
     }

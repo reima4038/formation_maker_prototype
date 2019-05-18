@@ -85,6 +85,9 @@ class DancerGroup {
     get dancers() {
         return this.dancers
     }
+    findDancer(x, y) {
+        return dancers[0]
+    }
 }
 
 class ColorDefine {
@@ -103,9 +106,11 @@ const Color = {
 }
 
 // 踊り子：丸
+let dancerGroups = []
 let front_group = new DancerGroup(Color.coral)
 let mid_group = new DancerGroup(Color.mediumaquamarine)
 let back_group = new DancerGroup(Color.skyblue)
+dancerGroups.push(front_group, mid_group, back_group)
 
 front_group.set(new Dancer(1, "れいま", 50, 50, stage_width, stage_height))
 front_group.set(new Dancer(2, "ふじもん", 150, 50, stage_width, stage_height))
@@ -126,17 +131,8 @@ back_group.set(new Dancer(15, "むーらん", 50, 350, stage_width, stage_height
 back_group.set(new Dancer(16, "ねぎ", 150, 350, stage_width, stage_height))
 back_group.set(new Dancer(17, "きらら", 250, 350, stage_width, stage_height))
 
-front_group.dancers.forEach(dancer => {
-    stage.addChild(dancer.container)
-})
-
-mid_group.dancers.forEach(dancer => {
-    stage.addChild(dancer.container)
-})
-
-back_group.dancers.forEach(dancer => {
-    stage.addChild(dancer.container)
-})
+dancerGroups.flatMap(group => group.dancers)
+    .forEach(dancer => stage.addChild(dancer.container))
 
 createjs.Ticker.addEventListener("tick", handleTick);
 function handleTick() {

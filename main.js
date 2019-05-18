@@ -27,7 +27,9 @@ class Dancer {
 
     constructor(number, name, x, y, stage_width, stage_height) {
         this.number = number
-
+        this.name = name
+        this.x = x
+        this.y = y
         let circle = new createjs.Shape();
         circle.graphics.beginFill("gray").drawCircle(x, y, 10)
         circle.cache(0, 0, stage_width, stage_height)
@@ -67,7 +69,9 @@ class Dancer {
     handleUp = (event) => {
 
     }
-
+    get point() {
+        return {x: this.x, y: this.y}
+    }
     get container() {
         return this.container
     }
@@ -75,7 +79,8 @@ class Dancer {
 
 class DancerGroup {
     dancers = []
-    constructor(color) {
+    constructor(group_name, color) {
+        this.group_name = group_name
         this.color = color
     }
     set(dancer) {
@@ -85,8 +90,12 @@ class DancerGroup {
     get dancers() {
         return this.dancers
     }
-    findDancer(x, y) {
-        return dancers[0]
+    findDancers(x, y) {
+        let targets = []
+        this.dancers.filter(dancer => x >= dancer.point.x -5 && x <= dancer.point.x + 5 &&
+                y >= dancer.point.y - 5 && y <= dancer.point.y + 5)
+            .forEach(dancer => targets.push(dancer))
+        return {group_name: this.group_name, dancers: targets}
     }
 }
 
@@ -107,9 +116,9 @@ const Color = {
 
 // 踊り子：丸
 let dancerGroups = []
-let front_group = new DancerGroup(Color.coral)
-let mid_group = new DancerGroup(Color.mediumaquamarine)
-let back_group = new DancerGroup(Color.skyblue)
+let front_group = new DancerGroup("front_group", Color.coral)
+let mid_group = new DancerGroup("mid_group", Color.mediumaquamarine)
+let back_group = new DancerGroup("back_group", Color.skyblue)
 dancerGroups.push(front_group, mid_group, back_group)
 
 front_group.set(new Dancer(1, "れいま", 50, 50, stage_width, stage_height))
@@ -132,7 +141,20 @@ back_group.set(new Dancer(16, "ねぎ", 150, 350, stage_width, stage_height))
 back_group.set(new Dancer(17, "きらら", 250, 350, stage_width, stage_height))
 
 dancerGroups.flatMap(group => group.dancers)
-    .forEach(dancer => stage.addChild(dancer.container))
+    .forEach(dancer => {
+        stage.addChild(dancer.container)
+    })
+
+stage.addEventListener("mousedown", handleMouseDown)
+function handleMouseDown(event) {
+    // マウスクリックした地点のグループ情報および踊り子情報を取得する
+    dancerGroups.flatMap(group => group.findDancers(event.stageX, event.stageY))
+        .filter(result => result.dancers.length > 0)
+        .forEach(result => {
+            console.log(result.group_name)
+            console.log(result.dancers)
+        })
+}
 
 createjs.Ticker.addEventListener("tick", handleTick);
 function handleTick() {

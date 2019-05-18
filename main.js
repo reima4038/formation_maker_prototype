@@ -1,4 +1,11 @@
 const stage = new createjs.Stage("hello_create_js")
+
+// タッチ操作をサポートしているブラウザーならば
+if(createjs.Touch.isSupported() == true){
+    // タッチ操作を有効にします。
+    createjs.Touch.enable(stage)
+}
+
 const stage_width = 300
 const stage_height = 600
 
@@ -51,6 +58,7 @@ class Dancer {
         target.updateCache()
     }
     handleDown = (event) => {
+        console.log(event)
         this.dragPointX = stage.mouseX - this.container.x
         this.dragPointY = stage.mouseY - this.container.y
     }

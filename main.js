@@ -20,6 +20,41 @@ frame_border.graphics
     .lineTo(0, 0)
 stage.addChild(frame_border)
 
+// 背景：グリッド(横4列)
+const horizontal_column = 12
+const virtical_column = 24
+let grid_horizontal = []
+let grid_virtical = []
+const horizontal_interval = stage_width / horizontal_column
+const virtical_interval = stage_height / virtical_column
+for(let i = 1; i < horizontal_column; i++) {
+    let horizon_line = new createjs.Shape()
+    horizon_line.graphics.beginStroke(i % 2 == 0 ? "darkgray": "gainsboro")
+    horizon_line.graphics
+        .moveTo(stage_width / horizontal_column * i, 0)
+        .lineTo(stage_width / horizontal_column * i, stage_height)
+    grid_horizontal.push(horizon_line)
+}
+
+for(let i = 1; i < virtical_column; i++) {
+    let virtical_line = new createjs.Shape()
+    
+    virtical_line.graphics.beginStroke(i % 2 == 0 ? "darkgray": "gainsboro")
+    virtical_line.graphics
+        .moveTo(0, stage_height / virtical_column * i)
+        .lineTo(stage_width, stage_height / virtical_column * i)
+    grid_virtical.push(virtical_line)
+}
+
+grid_horizontal.forEach(grid => stage.addChild(grid))
+grid_virtical.forEach(grid => stage.addChild(grid))
+
+
+
+
+
+
+
 // 踊り子
 class Dancer {
     container = new createjs.Container();

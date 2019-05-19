@@ -39,7 +39,6 @@ for(let i = 1; i < horizontal_column; i++) {
 
 for(let i = 1; i < virtical_column; i++) {
     let virtical_line = new createjs.Shape()
-    
     virtical_line.graphics.beginStroke(i % line_bold_interbal == 0 ? "darkgray": "gainsboro")
     virtical_line.graphics
         .moveTo(0, stage_height / virtical_column * i)
@@ -98,7 +97,8 @@ class Dancer {
         this.container.y = event.stageY - this.dragPointY
     }
     handleUp = (event) => {
-
+        this.x = event.stageX
+        this.y = event.stageY
     }
     get point() {
         return {x: this.x, y: this.y}
@@ -123,8 +123,8 @@ class DancerGroup {
     }
     findDancers(x, y) {
         let targets = []
-        this.dancers.filter(dancer => x >= dancer.point.x -5 && x <= dancer.point.x + 5 &&
-                y >= dancer.point.y - 5 && y <= dancer.point.y + 5)
+        this.dancers.filter(dancer => x >= dancer.point.x - 10 && x <= dancer.point.x + 10 &&
+                y >= dancer.point.y - 10 && y <= dancer.point.y + 10)
             .forEach(dancer => targets.push(dancer))
         return {group_name: this.group_name, dancers: targets}
     }
@@ -198,8 +198,12 @@ function handleMouseDown(event) {
     dancerGroups.flatMap(group => group.findDancers(event.stageX, event.stageY))
         .filter(result => result.dancers.length > 0)
         .forEach(result => {
-            console.log(result.group_name)
-            console.log(result.dancers)
+            let x = result.dancers[0].point.x
+            let y = result.dancers[0].point.y
+            let shadow = new createjs.Shape();
+            shadow.graphics.beginFill("gray").drawCircle(x, y, 10)
+            shadow.cache(0, 0, stage_width, stage_height)
+            stage.addChild(shadow)
         })
 }
 

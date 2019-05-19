@@ -153,33 +153,39 @@ let back_group = new DancerGroup("back_group", Color.skyblue)
 dancerGroups.push(front_group, mid_group, back_group)
 
 // 並び位置
-const three_column_left = stage_width / 12 * 2;
-const three_column_mid = stage_width / 12 * 6;
-const three_column_right = stage_width / 12 * 10;
-const two_column_left = stage_width / 12 * 4
-const two_column_right = stage_width / 12 * 8
+const four_column_outer_left = stage_width / horizontal_column * 2
+const four_column_inner_left = stage_width / horizontal_column * 6
+const four_column_inner_right = stage_width / horizontal_column * 10
+const four_column_outer_right = stage_width / horizontal_column * 14
+
+const three_column_left = stage_width / horizontal_column * 2
+const three_column_mid = stage_width / horizontal_column * 8
+const three_column_right = stage_width / horizontal_column * 14
+
+const two_column_left = stage_width / horizontal_column * 5
+const two_column_right = stage_width / horizontal_column * 11
 
 // front_groupは3列で並ぶ
-front_group.set(new Dancer(1, "宵越", three_column_left, 50, stage_width, stage_height))
-front_group.set(new Dancer(2, "畦道", three_column_mid, 50, stage_width, stage_height))
-front_group.set(new Dancer(3, "水澄", three_column_right, 50, stage_width, stage_height))
-front_group.set(new Dancer(4, "伊達", three_column_left, 100, stage_width, stage_height))
-front_group.set(new Dancer(5, "井浦", three_column_mid, 100, stage_width, stage_height))
-front_group.set(new Dancer(6, "王城", three_column_right, 100, stage_width, stage_height))
+front_group.set(new Dancer(1, "宵越", three_column_left, stage_height / virtical_column * 2, stage_width, stage_height))
+front_group.set(new Dancer(2, "畦道", three_column_mid, stage_height / virtical_column * 2, stage_width, stage_height))
+front_group.set(new Dancer(3, "水澄", three_column_right, stage_height / virtical_column * 2, stage_width, stage_height))
+front_group.set(new Dancer(4, "伊達", three_column_left, stage_height / virtical_column * 5, stage_width, stage_height))
+front_group.set(new Dancer(5, "井浦", three_column_mid, stage_height / virtical_column * 5, stage_width, stage_height))
+front_group.set(new Dancer(6, "王城", three_column_right, stage_height / virtical_column * 5, stage_width, stage_height))
 
 // mid_groupは2列で並ぶ
-mid_group.set(new Dancer(8, "冴木", two_column_left, 175, stage_width, stage_height))
-mid_group.set(new Dancer(9, "早乙女", two_column_right, 175, stage_width, stage_height))
-mid_group.set(new Dancer(10, "志場", two_column_left, 225, stage_width, stage_height))
-mid_group.set(new Dancer(11, "不破", two_column_right, 225, stage_width, stage_height))
+mid_group.set(new Dancer(8, "冴木", two_column_left, stage_height / virtical_column * 8, stage_width, stage_height))
+mid_group.set(new Dancer(9, "早乙女", two_column_right, stage_height / virtical_column * 8, stage_width, stage_height))
+mid_group.set(new Dancer(10, "志場", two_column_left, stage_height / virtical_column * 11, stage_width, stage_height))
+mid_group.set(new Dancer(11, "不破", two_column_right, stage_height / virtical_column * 11, stage_width, stage_height))
 
 // back_gorupは3列で並ぶ
-back_group.set(new Dancer(12, "岩田", three_column_left, 300, stage_width, stage_height))
-back_group.set(new Dancer(13, "喜多野", three_column_mid, 300, stage_width, stage_height))
-back_group.set(new Dancer(14, "立石", three_column_right, 300, stage_width, stage_height))
-back_group.set(new Dancer(15, "室井", three_column_left, 350, stage_width, stage_height))
-back_group.set(new Dancer(16, "金澤", three_column_mid, 350, stage_width, stage_height))
-back_group.set(new Dancer(17, "大和", three_column_right, 350, stage_width, stage_height))
+back_group.set(new Dancer(12, "岩田", four_column_outer_left, stage_height / virtical_column * 14, stage_width, stage_height))
+back_group.set(new Dancer(13, "喜多野", four_column_inner_left, stage_height / virtical_column * 14, stage_width, stage_height))
+back_group.set(new Dancer(14, "立石", four_column_inner_right, stage_height / virtical_column * 14, stage_width, stage_height))
+back_group.set(new Dancer(15, "室井", four_column_outer_right, stage_height / virtical_column * 14, stage_width, stage_height))
+back_group.set(new Dancer(16, "金澤", two_column_left, stage_height / virtical_column * 17, stage_width, stage_height))
+back_group.set(new Dancer(17, "大和", two_column_right, stage_height / virtical_column * 17, stage_width, stage_height))
 
 dancerGroups.flatMap(group => group.dancers)
     .forEach(dancer => {

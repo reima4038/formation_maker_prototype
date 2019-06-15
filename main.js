@@ -6,11 +6,18 @@ if(createjs.Touch.isSupported() == true){
     createjs.Touch.enable(stage)
 }
 
+// マウス操作時 マウスオーバーを有効化
+stage.enableMouseOver();
+
 // 横幅は3列, 4列どちらも対応するためどちらでも割れる数
 const stage_scale = {
     width : 12 * 30,
     height : 600
 }
+
+/*---------------------------
+ * 背景
+ *---------------------------*/
 
 // 枠線
 const frame_border = new FrameBorder(stage_scale)
@@ -21,6 +28,10 @@ frame_border.staging(stage)
 const grid = new Grid(16, 26, stage_scale)
 grid.drawLine()
 grid.staging(stage)
+
+/*---------------------------
+ * 踊り子
+ *---------------------------*/
 
 // 踊り子：丸
 const dancerGroups = new DancerGroups()
@@ -55,6 +66,35 @@ dancerGroups.addDancer('back_group', "大和", p.h_two_column_right, p.v_line_17
 
 dancerGroups.staging(stage)
 
+/*---------------------------
+ * ボタン類
+ *---------------------------*/
+const dataOutoutButton = createButton('Export', 100, 40, "#d9534f")
+dataOutoutButton.x = 375
+dataOutoutButton.y = 0
+stage.addChild(dataOutoutButton)
+
+const dataImportButton = createButton('Import', 100, 40, "#d9534f")
+dataImportButton.x = 375
+dataImportButton.y = 60
+stage.addChild(dataImportButton)
+
+const allRefreshButton = createButton('Refresh', 100, 40, "#d9534f")
+allRefreshButton.x = 375
+allRefreshButton.y = 120
+stage.addChild(allRefreshButton)
+
+dataOutoutButton.addEventListener("click", handleClick);
+dataImportButton.addEventListener("click", handleClick);
+allRefreshButton.addEventListener("click", handleClick);
+function handleClick(event) {
+    // TODO: クリックされた時の処理を記述
+    alert(event.currentTarget + " がクリックされました。");
+}
+
+/*---------------------------
+ * イベント
+ *---------------------------*/
 stage.addEventListener("mousedown", handleMouseDown)
 stage.addEventListener("pressup", handleUp)
 

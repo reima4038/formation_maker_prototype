@@ -1,4 +1,6 @@
-// 踊り子
+/**
+ * 踊り子
+ */ 
 class Dancer {
     container = new createjs.Container();
     dragPointX = 0;
@@ -68,6 +70,9 @@ class Dancer {
     }
 }
 
+/**
+ * 踊り子グループ
+ */
 class DancerGroup {
     dancers = []
     constructor(group_name, color) {
@@ -90,6 +95,9 @@ class DancerGroup {
     }
 }
 
+/**
+ * 踊り子全体
+ */
 class DancerGroups {
     counter = 0
     groups = []
@@ -116,20 +124,48 @@ class DancerGroups {
     }
 }
 
-//--------------
-// 色定義
-//--------------
-class ColorDefine {
-    constructor(r, g, b, a) {
-        this.red = r
-        this.green = g
-        this.blue = b
-        this.alpha = a
+/**
+ * 踊り子の並び位置
+ */
+class DancerPosition {
+    grid_column = {horizontal : 0, virtical : 0}
+    stage_scale = {width : 0, height : 0}
+    constructor(stage_scale, grid_horizontal_column, grid_virtical_column) {
+        this.stage_scale = stage_scale
+        this.grid_column.horizontal = grid_horizontal_column
+        this.grid_column.virtical = grid_virtical_column
     }
-}
-
-const Color = {
-    coral : new ColorDefine(255, 127, 80, 0),
-    mediumaquamarine : new ColorDefine(102, 205, 170),
-    skyblue : new ColorDefine(135, 206, 235)
+    /**
+     * 水平方向の位置を取得する
+     * @param {number} position 左端から数えたグリッドのマス目 
+     */
+    h_position(position) {
+        return this.stage_scale.width / this.grid_column.horizontal * position
+    }
+    /**
+     * 垂直方向の位置を取得する
+     * @param {number} position 
+     */
+    v_position(position) {
+        return this.stage_scale.height / this.grid_column.virtical * position
+    }
+    get definedPosition() {
+        return {
+            h_four_column_outer_left : this.h_position(2),
+            h_four_column_inner_left : this.h_position(6),
+            h_four_column_inner_right : this.h_position(10),
+            h_four_column_outer_right : this.h_position(14),
+            h_three_column_left : this.h_position(2),
+            h_three_column_mid : this.h_position(8),
+            h_three_column_right : this.h_position(14),
+            h_two_column_left : this.h_position(5),
+            h_two_column_right : this.h_position(11),
+            v_line_2 : this.v_position(2),
+            v_line_5 : this.v_position(5),
+            v_line_8 : this.v_position(8),
+            v_line_11 : this.v_position(11),
+            v_line_14 : this.v_position(14),
+            v_line_17 : this.v_position(17),
+        }
+    }
 }

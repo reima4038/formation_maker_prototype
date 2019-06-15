@@ -93,17 +93,16 @@ class DancerGroup {
 class DancerGroups {
     counter = 0
     groups = []
-    stage = {width : 0, height : 0}
-    constructor(stage_width, stage_height) {
-        this.stage.width = stage_width
-        this.stage.height = stage_height
+    stage_scale = {width : 0, height : 0}
+    constructor(stage_scale) {
+        this.stage_scale = stage_scale
     }
     addGroup(group_name, color) {
         this.groups.push(new DancerGroup(group_name, color))
     }
     addDancer(group_name, name, x, y) {
         this.groups.filter(g => g.group_name == group_name)
-            .forEach(g => g.set(new Dancer(this.generateId(), name, x, y, this.stage.width, this.stage.height)))
+            .forEach(g => g.set(new Dancer(this.generateId(), name, x, y, this.stage_scale.width, this.stage_scale.height)))
     }
     get groups() {
         return this.groups

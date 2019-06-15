@@ -2,10 +2,11 @@
  * 踊り子
  */ 
 class Dancer {
-    container = new createjs.Container();
-    dragPointX = 0;
-    dragPointY = 0;
-    shadows = [];
+    container = new createjs.Container()
+    dragPointX = 0
+    dragPointY = 0
+    shadows = []
+    shadowsLine = []
     constructor(id, name, x, y) {
         this.id = id
         this.name = name
@@ -59,9 +60,11 @@ class Dancer {
         return shadow
     }
     tieShadows() {
-        return this.drawLine({x : this.x, y : this.y},
-            // FIXME: sliceはarrayの末尾アクセスのため。もう少しいいやり方ないかな...
+         // FIXME: sliceはarrayの末尾アクセスのため。ぱっと見分からないからもう少しいいやり方ないかな...
+        const line = this.drawLine({x : this.x, y : this.y},
              {x : this.shadows.slice(-1)[0].graphics.command.x, y : this.shadows.slice(-1)[0].graphics.command.y})
+        this.shadowsLine.push(line)
+        return line
     }
     // TODO: 共通部品として外出し
     drawLine(from, to) {

@@ -23,7 +23,7 @@ grid.drawLine()
 grid.staging(stage)
 
 // 踊り子：丸
-const dancerGroups = new DancerGroups(stage_scale)
+const dancerGroups = new DancerGroups()
 dancerGroups.addGroup("front_group", Color.coral)
 dancerGroups.addGroup("mid_group", Color.mediumaquamarine)
 dancerGroups.addGroup("back_group", Color.skyblue)
@@ -57,12 +57,13 @@ dancerGroups.staging(stage)
 
 stage.addEventListener("mousedown", handleMouseDown)
 function handleMouseDown(event) {
+    console.log(event.target)
     // マウスクリックした地点のグループ情報および踊り子情報を取得する
     dancerGroups.groups.flatMap(group => group.findDancers(event.stageX, event.stageY))
         .filter(result => result.dancers.length > 0)
         .map(result => result.dancers[0])
         .forEach(dancer => {
-            stage.addChild(dancer.addShadows(stage_scale.width, stage_scale.height))
+            stage.addChild(dancer.addShadows())
         })
 }
 

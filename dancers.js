@@ -6,21 +6,19 @@ class Dancer {
     dragPointX = 0;
     dragPointY = 0;
     shadows = [];
-
-    constructor(id, name, x, y, stage_width, stage_height) {
+    constructor(id, name, x, y) {
         this.id = id
         this.name = name
         this.x = x
         this.y = y
-        let circle = new createjs.Shape();
-        circle.graphics.beginFill("gray").drawCircle(x, y, 10)
-        circle.cache(0, 0, stage_width, stage_height)
+        const scale = 10
+        const circle = new createjs.Shape();
+        circle.graphics.beginFill("gray").drawCircle(x, y, scale)
+        circle.cache(this.x - scale, this.y - scale, this.x + scale, this.y + scale)
 
         let nameText = new createjs.Text(name, "10px Arial", "brack")
         nameText.x = x - 5
         nameText.y = y - 5
-        nameText.cache(0, 0, stage_width, stage_height)
-
         const circleIndex = 0
         const nameTextIndex = 1
 
@@ -41,10 +39,10 @@ class Dancer {
         target.updateCache()
     }
 
-    addShadows(stage_width, stage_height) {
+    addShadows() {
         const shadow = new createjs.Shape();
         shadow.graphics.beginFill("gray").drawCircle(this.x, this.y, 10)
-        shadow.cache(0, 0, stage_width, stage_height)
+        shadow.cache(this.x - 10, this.y - 10, this.x + 10, this.y + 10,)
         this.shadows.push(shadow)
         return shadow
     }
@@ -101,16 +99,14 @@ class DancerGroup {
 class DancerGroups {
     counter = 0
     groups = []
-    stage_scale = {width : 0, height : 0}
-    constructor(stage_scale) {
-        this.stage_scale = stage_scale
+    constructor() {
     }
     addGroup(group_name, color) {
         this.groups.push(new DancerGroup(group_name, color))
     }
     addDancer(group_name, name, x, y) {
         this.groups.filter(g => g.group_name == group_name)
-            .forEach(g => g.set(new Dancer(this.generateId(), name, x, y, this.stage_scale.width, this.stage_scale.height)))
+            .forEach(g => g.set(new Dancer(this.generateId(), name, x, y)))
     }
     get groups() {
         return this.groups

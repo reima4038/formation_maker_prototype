@@ -52,7 +52,7 @@ grid_virtical.forEach(grid => stage.addChild(grid))
 
 
 // 踊り子：丸
-let dancerGroups = new DancerGroups()
+const dancerGroups = new DancerGroups(stage_width, stage_height)
 dancerGroups.addGroup("front_group", Color.coral)
 dancerGroups.addGroup("mid_group", Color.mediumaquamarine)
 dancerGroups.addGroup("back_group", Color.skyblue)
@@ -71,26 +71,26 @@ const two_column_left = stage_width / horizontal_column * 5
 const two_column_right = stage_width / horizontal_column * 11
 
 // front_groupは3列で並ぶ
-dancerGroups.addDancer('front_group', new Dancer(1, "宵越", three_column_left, stage_height / virtical_column * 2, stage_width, stage_height))
-dancerGroups.addDancer('front_group', new Dancer(2, "畦道", three_column_mid, stage_height / virtical_column * 2, stage_width, stage_height))
-dancerGroups.addDancer('front_group', new Dancer(3, "水澄", three_column_right, stage_height / virtical_column * 2, stage_width, stage_height))
-dancerGroups.addDancer('front_group', new Dancer(4, "伊達", three_column_left, stage_height / virtical_column * 5, stage_width, stage_height))
-dancerGroups.addDancer('front_group', new Dancer(5, "井浦", three_column_mid, stage_height / virtical_column * 5, stage_width, stage_height))
-dancerGroups.addDancer('front_group', new Dancer(6, "王城", three_column_right, stage_height / virtical_column * 5, stage_width, stage_height))
+dancerGroups.addDancer('front_group', "宵越", three_column_left, stage_height / virtical_column * 2)
+dancerGroups.addDancer('front_group', "畦道", three_column_mid, stage_height / virtical_column * 2)
+dancerGroups.addDancer('front_group', "水澄", three_column_right, stage_height / virtical_column * 2)
+dancerGroups.addDancer('front_group', "伊達", three_column_left, stage_height / virtical_column * 5)
+dancerGroups.addDancer('front_group', "井浦", three_column_mid, stage_height / virtical_column * 5)
+dancerGroups.addDancer('front_group', "王城", three_column_right, stage_height / virtical_column * 5)
 
 // mid_groupは2列で並ぶ
-dancerGroups.addDancer('mid_group', new Dancer(8, "冴木", two_column_left, stage_height / virtical_column * 8, stage_width, stage_height))
-dancerGroups.addDancer('mid_group', new Dancer(9, "早乙女", two_column_right, stage_height / virtical_column * 8, stage_width, stage_height))
-dancerGroups.addDancer('mid_group', new Dancer(10, "志場", two_column_left, stage_height / virtical_column * 11, stage_width, stage_height))
-dancerGroups.addDancer('mid_group', new Dancer(11, "不破", two_column_right, stage_height / virtical_column * 11, stage_width, stage_height))
+dancerGroups.addDancer('mid_group', "冴木", two_column_left, stage_height / virtical_column * 8)
+dancerGroups.addDancer('mid_group', "早乙女", two_column_right, stage_height / virtical_column * 8)
+dancerGroups.addDancer('mid_group', "志場", two_column_left, stage_height / virtical_column * 11)
+dancerGroups.addDancer('mid_group', "不破", two_column_right, stage_height / virtical_column * 11)
 
 // back_gorupは3列で並ぶ
-dancerGroups.addDancer('back_group', new Dancer(12, "岩田", four_column_outer_left, stage_height / virtical_column * 14, stage_width, stage_height))
-dancerGroups.addDancer('back_group', new Dancer(13, "喜多野", four_column_inner_left, stage_height / virtical_column * 14, stage_width, stage_height))
-dancerGroups.addDancer('back_group', new Dancer(14, "立石", four_column_inner_right, stage_height / virtical_column * 14, stage_width, stage_height))
-dancerGroups.addDancer('back_group', new Dancer(15, "室井", four_column_outer_right, stage_height / virtical_column * 14, stage_width, stage_height))
-dancerGroups.addDancer('back_group', new Dancer(16, "金澤", two_column_left, stage_height / virtical_column * 17, stage_width, stage_height))
-dancerGroups.addDancer('back_group', new Dancer(17, "大和", two_column_right, stage_height / virtical_column * 17, stage_width, stage_height))
+dancerGroups.addDancer('back_group', "岩田", four_column_outer_left, stage_height / virtical_column * 14)
+dancerGroups.addDancer('back_group', "喜多野", four_column_inner_left, stage_height / virtical_column * 14)
+dancerGroups.addDancer('back_group', "立石", four_column_inner_right, stage_height / virtical_column * 14)
+dancerGroups.addDancer('back_group', "室井", four_column_outer_right, stage_height / virtical_column * 14)
+dancerGroups.addDancer('back_group', "金澤", two_column_left, stage_height / virtical_column * 17)
+dancerGroups.addDancer('back_group', "大和", two_column_right, stage_height / virtical_column * 17)
 
 dancerGroups.staging(stage)
 

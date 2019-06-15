@@ -5,8 +5,8 @@ class Dancer {
     dragPointY = 0;
     shadows = [];
 
-    constructor(number, name, x, y, stage_width, stage_height) {
-        this.number = number
+    constructor(id, name, x, y, stage_width, stage_height) {
+        this.id = id
         this.name = name
         this.x = x
         this.y = y
@@ -91,16 +91,25 @@ class DancerGroup {
 }
 
 class DancerGroups {
+    counter = 0
     groups = []
+    stage = {width : 0, height : 0}
+    constructor(stage_width, stage_height) {
+        this.stage.width = stage_width
+        this.stage.height = stage_height
+    }
     addGroup(group_name, color) {
         this.groups.push(new DancerGroup(group_name, color))
     }
-    addDancer(group_name, dancer) {
+    addDancer(group_name, name, x, y) {
         this.groups.filter(g => g.group_name == group_name)
-            .forEach(g => g.set(dancer))
+            .forEach(g => g.set(new Dancer(this.generateId(), name, x, y, this.stage.width, this.stage.height)))
     }
     get groups() {
         return this.groups
+    }
+    generateId() {
+        return this.counter++
     }
     staging(stage) {
         this.groups.flatMap(group => group.dancers)
@@ -108,6 +117,9 @@ class DancerGroups {
     }
 }
 
+//--------------
+// 色定義
+//--------------
 class ColorDefine {
     constructor(r, g, b, a) {
         this.red = r

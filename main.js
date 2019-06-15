@@ -56,15 +56,16 @@ dancerGroups.addDancer('back_group', "大和", p.h_two_column_right, p.v_line_17
 dancerGroups.staging(stage)
 
 stage.addEventListener("mousedown", handleMouseDown)
+stage.addEventListener("pressup", handleUp)
+
 function handleMouseDown(event) {
-    console.log(event.target)
-    // マウスクリックした地点のグループ情報および踊り子情報を取得する
-    dancerGroups.groups.flatMap(group => group.findDancers(event.stageX, event.stageY))
-        .filter(result => result.dancers.length > 0)
-        .map(result => result.dancers[0])
-        .forEach(dancer => {
-            stage.addChild(dancer.addShadows())
-        })
+    // マウスクリックした地点の踊り子の地点を影として記録する
+    dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChild(d.addShadows()))
+}
+
+function handleUp(event) {
+    // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
+    dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChild(d.tieShadows()))
 }
 
 createjs.Ticker.addEventListener("tick", handleTick);

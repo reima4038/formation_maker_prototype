@@ -29,24 +29,6 @@ class Dancer {
         this.container.addEventListener("pressmove", this.handleMove)
         this.container.addEventListener("pressup", this.handleUp)
     }
-    setColor(color) {
-        const circleIndex = 0
-        let target = this.container.getChildAt(circleIndex);
-        target.filters = [
-            new createjs.ColorFilter(0, 0, 0, 1, 
-                color.red, color.green, color.blue, color.alpha)
-        ]
-        target.updateCache()
-    }
-
-    addShadows() {
-        const shadow = new createjs.Shape();
-        shadow.graphics.beginFill("gray").drawCircle(this.x, this.y, 10)
-        shadow.cache(this.x - 10, this.y - 10, this.x + 10, this.y + 10,)
-        this.shadows.push(shadow)
-        return shadow
-    }
-
     handleDown = (event) => {
         this.dragPointX = event.stageX - this.container.x
         this.dragPointY = event.stageY - this.container.y
@@ -59,7 +41,37 @@ class Dancer {
         this.x = event.stageX
         this.y = event.stageY
     }
-    
+
+    setColor(color) {
+        const circleIndex = 0
+        let target = this.container.getChildAt(circleIndex)
+        target.filters = [
+            new createjs.ColorFilter(0, 0, 0, 1, 
+                color.red, color.green, color.blue, color.alpha)
+        ]
+        target.updateCache()
+    }
+    addShadows() {
+        const shadow = new createjs.Shape()
+        shadow.graphics.beginFill("gray").drawCircle(this.x, this.y, 10)
+        shadow.cache(this.x - 10, this.y - 10, this.x + 10, this.y + 10)
+        this.shadows.push(shadow)
+        return shadow
+    }
+    tieShadows() {
+        return this.drawLine({x : this.x, y : this.y},
+            // FIXME: sliceはarrayの末尾アクセスのため。もう少しいいやり方ないかな...
+             {x : this.shadows.slice(-1)[0].graphics.command.x, y : this.shadows.slice(-1)[0].graphics.command.y})
+    }
+    // TODO: 共通部品として外出し
+    drawLine(from, to) {
+        const line = new createjs.Shape()
+        line.graphics.beginStroke("DarkRed")
+        line.graphics
+            .moveTo(from.x, from.y)
+            .lineTo(to.x, to.y)
+        return line;
+    }
     get point() {
         return {x: this.x, y: this.y}
     }
@@ -84,7 +96,7 @@ class DancerGroup {
     get dancers() {
         return this.dancers
     }
-    findDancers(x, y) {
+    findDancer(x, y) {
         let targets = []
         this.dancers.filter(dancer => x >= dancer.point.x - 10 && x <= dancer.point.x + 10 &&
                 y >= dancer.point.y - 10 && y <= dancer.point.y + 10)
@@ -113,6 +125,12 @@ class DancerGroups {
     }
     generateId() {
         return this.counter++
+    }
+    findDancer(x, y, callbackFunction) {
+        return this.groups.flatMap(group => group.findDancer(x, y))
+        .filter(result => result.dancers.length > 0)
+        .map(result => result.dancers[0])
+        .forEach(callbackFunction)
     }
     staging(stage) {
         this.groups.flatMap(group => group.dancers)

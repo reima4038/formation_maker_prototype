@@ -29,6 +29,8 @@ const grid = new Grid(16, 26, stage_scale)
 grid.drawLine()
 grid.staging(stage)
 
+const backgroud_index = grid.lastIndex(stage)
+
 /*---------------------------
  * 踊り子
  *---------------------------*/
@@ -69,24 +71,30 @@ dancerGroups.staging(stage)
 /*---------------------------
  * ボタン類
  *---------------------------*/
-const dataOutoutButton = createButton('Export', 100, 40, "#d9534f")
-dataOutoutButton.x = 375
-dataOutoutButton.y = 0
-stage.addChild(dataOutoutButton)
+const saveButton = createButton('Save', 100, 40, "#d9534f")
+saveButton.x = 375
+saveButton.y = 0
+stage.addChild(saveButton)
 
-const dataImportButton = createButton('Import', 100, 40, "#d9534f")
-dataImportButton.x = 375
-dataImportButton.y = 60
-stage.addChild(dataImportButton)
+const refleshButton = createButton('Refresh', 100, 40, "#d9534f")
+refleshButton.x = 375
+refleshButton.y = 60
+stage.addChild(refleshButton)
 
-const allRefreshButton = createButton('Refresh', 100, 40, "#d9534f")
-allRefreshButton.x = 375
-allRefreshButton.y = 120
-stage.addChild(allRefreshButton)
+const exportButton = createButton('Export', 100, 40, "#d9534f")
+exportButton.x = 375
+exportButton.y = 120
+stage.addChild(exportButton)
 
-dataOutoutButton.addEventListener("click", handleClick);
-dataImportButton.addEventListener("click", handleClick);
-allRefreshButton.addEventListener("click", handleClick);
+const importButton = createButton('Import', 100, 40, "#d9534f")
+importButton.x = 375
+importButton.y = 180
+stage.addChild(importButton)
+
+saveButton.addEventListener("click", handleClick);
+refleshButton.addEventListener("click", handleClick);
+exportButton.addEventListener("click", handleClick);
+importButton.addEventListener("click", handleClick);
 function handleClick(event) {
     // TODO: クリックされた時の処理を記述
     alert(event.currentTarget + " がクリックされました。");
@@ -100,12 +108,14 @@ stage.addEventListener("pressup", handleUp)
 
 function handleMouseDown(event) {
     // マウスクリックした地点の踊り子の地点を影として記録する
-    dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChild(d.addShadows()))
+    // 影が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
+    dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChildAt(d.addShadows(), backgroud_index))
 }
 
 function handleUp(event) {
     // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
-    dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChild(d.tieShadows()))
+    // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
+    dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChildAt(d.tieShadows(), backgroud_index))
 }
 
 createjs.Ticker.addEventListener("tick", handleTick);

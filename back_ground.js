@@ -15,8 +15,8 @@ class FrameBorder {
             .lineTo(0, this.stage_scale.height)
             .lineTo(0, 0)
     }
-    staging(stage) {
-        stage.addChild(this.frame_border)
+    staging(stage, layer) {
+        stage.addChild(this.frame_border, layer)
     }
 }
 
@@ -71,6 +71,10 @@ class Grid {
     staging(stage) {
         this.grid_horizontal.forEach(grid => stage.addChild(grid))
         this.grid_virtical.forEach(grid => stage.addChild(grid))
+    }
+
+    lastIndex(stage) {
+        return stage.getChildIndex(this.grid_virtical[this.grid_virtical.length - 1])
     }
 
 }

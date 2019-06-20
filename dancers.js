@@ -3,6 +3,7 @@
  */ 
 class Dancer {
     container = new createjs.Container()
+    color = Color.gray
     dragPointX = 0
     dragPointY = 0
     shadows = []
@@ -14,7 +15,7 @@ class Dancer {
         this.y = y
         const scale = 10
         const circle = new createjs.Shape();
-        circle.graphics.beginFill("gray").drawCircle(x, y, scale)
+        circle.graphics.beginFill(this.color).drawCircle(x, y, scale)
         circle.cache(this.x - scale, this.y - scale, this.x + scale, this.y + scale)
 
         let nameText = new createjs.Text(name, "10px Arial", "brack")
@@ -44,6 +45,7 @@ class Dancer {
     }
 
     setColor(color) {
+        this.color = color
         const circleIndex = 0
         let target = this.container.getChildAt(circleIndex)
         target.filters = [
@@ -54,7 +56,8 @@ class Dancer {
     }
     addShadows() {
         const shadow = new createjs.Shape()
-        shadow.graphics.beginFill("gray").drawCircle(this.x, this.y, 10)
+        const color = this.color.darker().semitransparent().rgba()
+        shadow.graphics.beginFill(color).drawCircle(this.x, this.y, 10)
         shadow.cache(this.x - 10, this.y - 10, this.x + 10, this.y + 10)
         this.shadows.push(shadow)
         return shadow
@@ -62,14 +65,15 @@ class Dancer {
     tieShadows() {
          // FIXME: sliceはarrayの末尾アクセスのため。ぱっと見分からないからもう少しいいやり方ないかな...
         const line = this.drawLine({x : this.x, y : this.y},
-             {x : this.shadows.slice(-1)[0].graphics.command.x, y : this.shadows.slice(-1)[0].graphics.command.y})
+             {x : this.shadows.slice(-1)[0].graphics.command.x, y : this.shadows.slice(-1)[0].graphics.command.y},
+             this.color.darker().rgba())
         this.shadowsLine.push(line)
         return line
     }
     // TODO: 共通部品として外出し
-    drawLine(from, to) {
+    drawLine(from, to, color) {
         const line = new createjs.Shape()
-        line.graphics.beginStroke("DarkRed")
+        line.graphics.beginStroke(color)
         line.graphics
             .moveTo(from.x, from.y)
             .lineTo(to.x, to.y)

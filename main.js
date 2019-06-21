@@ -101,7 +101,7 @@ stage.addChild(importButton)
 
 saveButton.addEventListener("click", event => saveCanvas('png', target));
 refleshButton.addEventListener("click", event => location.reload());
-exportButton.addEventListener("click", handleClick);
+exportButton.addEventListener("click", event => console.log(JSON.stringify(dancerGroups.export)));
 importButton.addEventListener("click", handleClick);
 
 function handleClick(event) {

@@ -85,6 +85,17 @@ class Dancer {
     get container() {
         return this.container
     }
+    get export() {
+        let dancerJsonData = {
+            id : this.id,
+            name : this.name,
+            x : this.x,
+            y : this.y,
+            shadows : []
+        }
+        this.shadows.forEach(s => dancerJsonData.shadows.push({x: s.graphics.command.x, y: s.graphics.command.y}))
+        return dancerJsonData
+    }
 }
 
 /**
@@ -109,6 +120,15 @@ class DancerGroup {
                 y >= dancer.point.y - 10 && y <= dancer.point.y + 10)
             .forEach(dancer => targets.push(dancer))
         return {group_name: this.group_name, dancers: targets}
+    }
+    get export() {
+        let dancersJsonData = {
+            group_name : this.group_name,
+            color : this.color,
+            dancers : []
+        }
+        this.dancers.forEach(d => dancersJsonData.dancers.push(d.export))
+        return dancersJsonData
     }
 }
 
@@ -142,6 +162,13 @@ class DancerGroups {
     staging(stage) {
         this.groups.flatMap(group => group.dancers)
             .forEach(dancer => stage.addChild(dancer.container))
+    }
+    get export() {
+        let dancerGroupsJsonData = {
+            groups : []
+        }
+        this.groups.forEach(g => dancerGroupsJsonData.groups.push(g.export))
+        return dancerGroupsJsonData
     }
 }
 

@@ -91,10 +91,11 @@ importButton.x = 375
 importButton.y = 180
 stage.addChild(importButton)
 
-saveButton.addEventListener("click", handleClick);
-refleshButton.addEventListener("click", handleClick);
+saveButton.addEventListener("click", event => saveCanvas('png', target));
+refleshButton.addEventListener("click", event => location.reload());
 exportButton.addEventListener("click", handleClick);
 importButton.addEventListener("click", handleClick);
+
 function handleClick(event) {
     // TODO: クリックされた時の処理を記述
     alert(event.currentTarget + " がクリックされました。");

@@ -9,10 +9,18 @@ if(createjs.Touch.isSupported() == true){
 // マウス操作時 マウスオーバーを有効化
 stage.enableMouseOver();
 
+// グリッド（マス）の情報
+const grid_properties = {
+    x : 16,
+    y : 26,
+    size : 23,
+    scale : 1.0
+}
+
 // 横幅は3列, 4列どちらも対応するためどちらでも割れる数
-const stage_scale = {
-    width : 12 * 30,
-    height : 600
+const stage_size = {
+    width : grid_properties.x * grid_properties.size * grid_properties.scale,
+    height : grid_properties.y * grid_properties.size * grid_properties.scale
 }
 
 /*---------------------------
@@ -20,12 +28,12 @@ const stage_scale = {
  *---------------------------*/
 
 // 枠線
-const frame_border = new FrameBorder(stage_scale)
+const frame_border = new FrameBorder(stage_size)
 frame_border.drawLine()
 frame_border.staging(stage)
 
 // グリッド
-const grid = new Grid(16, 26, stage_scale)
+const grid = new Grid(grid_properties.x, grid_properties.y, stage_size)
 grid.drawLine()
 grid.staging(stage)
 
@@ -42,7 +50,7 @@ dancerGroups.addGroup("mid_group", Color.mediumaquamarine)
 dancerGroups.addGroup("back_group", Color.skyblue)
 
 // 並び位置
-const p = new DancerPosition(stage_scale, grid.horizontal_column, grid.virtical_column).definedPosition
+const p = new DancerPosition(stage_size, grid.horizontal_column, grid.virtical_column).definedPosition
 
 // front_groupは3列で並ぶ
 dancerGroups.addDancer('front_group', "宵越", p.h_three_column_left, p.v_line_2)

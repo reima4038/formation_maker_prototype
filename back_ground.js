@@ -1,18 +1,18 @@
 // 背景：枠線
 class FrameBorder {
     frame_border
-    stage_scale = {width : 0, height : 0}
-    constructor(stage_scale) {
-        this.stage_scale = stage_scale
+    stage_size = {width : 0, height : 0}
+    constructor(stage_size) {
+        this.stage_size = stage_size
         this.frame_border = new createjs.Shape()
     }
     drawLine() {
         this.frame_border.graphics.beginStroke("DarkRed")
         this.frame_border.graphics
             .moveTo(0, 0)
-            .lineTo(this.stage_scale.width, 0)
-            .lineTo(this.stage_scale.width, this.stage_scale.height)
-            .lineTo(0, this.stage_scale.height)
+            .lineTo(this.stage_size.width, 0)
+            .lineTo(this.stage_size.width, this.stage_size.height)
+            .lineTo(0, this.stage_size.height)
             .lineTo(0, 0)
     }
     staging(stage, layer) {
@@ -25,13 +25,13 @@ class Grid {
     horizontal_column = 0
     virtical_column = 0
     line_bold_interval = 2
-    stage_scale = {width : 0, height : 0}
+    stage_size = {width : 0, height : 0}
     grid_horizontal = []
     grid_virtical = []
-    constructor(horizontal_column, virtical_column, stage_scale) {
+    constructor(horizontal_column, virtical_column, stage_size) {
         this.horizontal_column = horizontal_column
         this.virtical_column = virtical_column
-        this.stage_scale = stage_scale
+        this.stage_size = stage_size
     }
     get horizontal_column() {
         return this.horizontal_column
@@ -43,10 +43,10 @@ class Grid {
         return this.horizontal_column
     }
     get horizontal_interval() {
-        return this.stage_scale.width / this.horizontal_column
+        return this.stage_size.width / this.horizontal_column
     }
     get virtical_interval() {
-        return this.stage_scale.height / this.virtical_column
+        return this.stage_size.height / this.virtical_column
     }
     drawLine() {
         for(let i = 1; i < this.horizontal_column; i++) {
@@ -54,7 +54,7 @@ class Grid {
             horizon_line.graphics.beginStroke(i % this.line_bold_interval == 0 ? "darkgray": "gainsboro")
             horizon_line.graphics
                 .moveTo(this.horizontal_interval * i, 0)
-                .lineTo(this.horizontal_interval * i, this.stage_scale.height)
+                .lineTo(this.horizontal_interval * i, this.stage_size.height)
             this.grid_horizontal.push(horizon_line)
         }
         
@@ -63,7 +63,7 @@ class Grid {
             virtical_line.graphics.beginStroke(i % this.line_bold_interval == 0 ? "darkgray": "gainsboro")
             virtical_line.graphics
                 .moveTo(0, this.virtical_interval * i)
-                .lineTo(this.stage_scale.width, this.virtical_interval * i)
+                .lineTo(this.stage_size.width, this.virtical_interval * i)
             this.grid_virtical.push(virtical_line)
         }
         

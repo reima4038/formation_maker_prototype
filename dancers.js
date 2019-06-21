@@ -150,9 +150,9 @@ class DancerGroups {
  */
 class DancerPosition {
     grid_column = {horizontal : 0, virtical : 0}
-    stage_scale = {width : 0, height : 0}
-    constructor(stage_scale, grid_horizontal_column, grid_virtical_column) {
-        this.stage_scale = stage_scale
+    stage_size = {width : 0, height : 0}
+    constructor(stage_size, grid_horizontal_column, grid_virtical_column) {
+        this.stage_size = stage_size
         this.grid_column.horizontal = grid_horizontal_column
         this.grid_column.virtical = grid_virtical_column
     }
@@ -161,14 +161,14 @@ class DancerPosition {
      * @param {number} position 左端から数えたグリッドのマス目 
      */
     h_position(position) {
-        return this.stage_scale.width / this.grid_column.horizontal * position
+        return this.stage_size.width / this.grid_column.horizontal * position
     }
     /**
      * 垂直方向の位置を取得する
      * @param {number} position 
      */
     v_position(position) {
-        return this.stage_scale.height / this.grid_column.virtical * position
+        return this.stage_size.height / this.grid_column.virtical * position
     }
     get definedPosition() {
         return {

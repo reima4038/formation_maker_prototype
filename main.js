@@ -67,7 +67,16 @@ stage.addChild(importButton)
 saveButton.addEventListener("click", event => saveCanvas('png', target));
 refleshButton.addEventListener("click", event => location.reload());
 exportButton.addEventListener("click", event => exportJsonData(JSON.stringify(dancerGroups.export)));
-importButton.addEventListener("click", event => importDancersData(dancerGroups, stage));
+importButton.addEventListener("click", event => importDancersData(successCallBack, () => {}));
+
+const successCallBack = (file) => {
+    const jsonData = JSON.parse(file)
+    jsonData.groups.forEach(g => {
+        dancerGroups.addGroup(g.group_name, new ColorDefine(g.color.red, g.color.green, g.color.blue, g.color.alpha))
+        g.dancers.forEach(d => dancerGroups.addDancer(g.group_name, d.name, d.x, d.y))
+    })
+    dancerGroups.staging(stage)
+}
 
 /*---------------------------
  * イベント

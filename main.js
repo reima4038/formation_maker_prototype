@@ -67,7 +67,7 @@ stage.addChild(importButton)
 saveButton.addEventListener("click", event => saveCanvas('png', target));
 refleshButton.addEventListener("click", event => location.reload());
 exportButton.addEventListener("click", event => exportJsonData(JSON.stringify(dancerGroups.export)));
-importButton.addEventListener("click", event => importDancersData(successCallBack, () => {}));
+importButton.addEventListener("click", event => importData(successCallBack, () => {}));
 
 const successCallBack = (file) => {
     const jsonData = JSON.parse(file)

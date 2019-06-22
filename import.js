@@ -25,6 +25,6 @@ function fileDialog() {
     })();
 }
 
-function importDancersData(successCallBack, failuarCallBack) {
+function importData(successCallBack, failuarCallBack) {
     fileDialog().then(successCallBack, failuarCallBack)
 }

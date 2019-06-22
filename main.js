@@ -44,24 +44,29 @@ const dancerGroups = new DancerGroups()
 /*---------------------------
  * ボタン類
  *---------------------------*/
-const saveButton = createButton('Save', 100, 40, "#d9534f")
-saveButton.x = 375
-saveButton.y = 0
+const button_size = {
+    width : 100,
+    height : 40,
+    gap : 10
+}
+const saveButton = createButton('Save', button_size.width, button_size.height, "#d9534f")
+saveButton.x = stage_size.width + button_size.gap
+saveButton.y = (button_size.height + button_size.gap) * 0
 stage.addChild(saveButton)
 
-const refleshButton = createButton('Refresh', 100, 40, "#d9534f")
-refleshButton.x = 375
-refleshButton.y = 60
+const refleshButton = createButton('Refresh', button_size.width, button_size.height, "#d9534f")
+refleshButton.x = stage_size.width + button_size.gap
+refleshButton.y = (button_size.height + button_size.gap) * 1
 stage.addChild(refleshButton)
 
-const exportButton = createButton('Export', 100, 40, "#d9534f")
-exportButton.x = 375
-exportButton.y = 120
+const exportButton = createButton('Export', button_size.width, button_size.height, "#d9534f")
+exportButton.x = stage_size.width + button_size.gap
+exportButton.y = (button_size.height + button_size.gap) * 2
 stage.addChild(exportButton)
 
-const importButton = createButton('Import', 100, 40, "#d9534f")
-importButton.x = 375
-importButton.y = 180
+const importButton = createButton('Import', button_size.width, button_size.height, "#d9534f")
+importButton.x = stage_size.width + button_size.gap
+importButton.y = (button_size.height + button_size.gap) * 3
 stage.addChild(importButton)
 
 saveButton.addEventListener("click", event => saveCanvas('png', target));

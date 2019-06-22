@@ -1,14 +1,10 @@
 function importData(successCallBack, failuarCallBack) {
-    console.log('1. import data')
     fileDialog().then(successCallBack, failuarCallBack)
 }
 
 async function fileDialog() {
-    console.log('2. file dialog')
     const file = await showOpenFileDialog();
-    console.log('3. show open file dialog')
     const content = await readAsText(file);
-    console.log('4. read as text')
     // 内容表示
     return content
 }

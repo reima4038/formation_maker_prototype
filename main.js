@@ -39,42 +39,7 @@ grid.staging(stage)
 
 const backgroud_index = grid.lastIndex(stage)
 
-/*---------------------------
- * 踊り子
- *---------------------------*/
-
-// 踊り子：丸
 const dancerGroups = new DancerGroups()
-dancerGroups.addGroup("front_group", Color.coral)
-dancerGroups.addGroup("mid_group", Color.mediumaquamarine)
-dancerGroups.addGroup("back_group", Color.skyblue)
-
-// 並び位置
-const p = new DancerPosition(stage_size, grid.horizontal_column, grid.virtical_column).definedPosition
-
-// front_groupは3列で並ぶ
-dancerGroups.addDancer('front_group', "宵越", p.h_three_column_left, p.v_line_2)
-dancerGroups.addDancer('front_group', "畦道", p.h_three_column_mid, p.v_line_2)
-dancerGroups.addDancer('front_group', "水澄", p.h_three_column_right, p.v_line_2)
-dancerGroups.addDancer('front_group', "伊達", p.h_three_column_left, p.v_line_5)
-dancerGroups.addDancer('front_group', "井浦", p.h_three_column_mid, p.v_line_5)
-dancerGroups.addDancer('front_group', "王城", p.h_three_column_right, p.v_line_5)
-
-// mid_groupは2列で並ぶ
-dancerGroups.addDancer('mid_group', "冴木", p.h_two_column_left, p.v_line_8)
-dancerGroups.addDancer('mid_group', "早乙女", p.h_two_column_right, p.v_line_8)
-dancerGroups.addDancer('mid_group', "志場", p.h_two_column_left, p.v_line_11)
-dancerGroups.addDancer('mid_group', "不破", p.h_two_column_right, p.v_line_11)
-
-// back_gorupは3列で並ぶ
-dancerGroups.addDancer('back_group', "岩田", p.h_four_column_outer_left, p.v_line_14)
-dancerGroups.addDancer('back_group', "喜多野", p.h_four_column_inner_left, p.v_line_14)
-dancerGroups.addDancer('back_group', "立石", p.h_four_column_inner_right, p.v_line_14)
-dancerGroups.addDancer('back_group', "室井", p.h_four_column_outer_right, p.v_line_14)
-dancerGroups.addDancer('back_group', "金澤", p.h_two_column_left, p.v_line_17)
-dancerGroups.addDancer('back_group', "大和", p.h_two_column_right, p.v_line_17)
-
-dancerGroups.staging(stage)
 
 /*---------------------------
  * ボタン類
@@ -102,12 +67,7 @@ stage.addChild(importButton)
 saveButton.addEventListener("click", event => saveCanvas('png', target));
 refleshButton.addEventListener("click", event => location.reload());
 exportButton.addEventListener("click", event => exportJsonData(JSON.stringify(dancerGroups.export)));
-importButton.addEventListener("click", handleClick);
-
-function handleClick(event) {
-    // TODO: クリックされた時の処理を記述
-    alert(event.currentTarget + " がクリックされました。");
-}
+importButton.addEventListener("click", event => importJsonData(dancerGroups, stage));
 
 /*---------------------------
  * イベント

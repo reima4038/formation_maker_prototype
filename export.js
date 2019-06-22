@@ -15,6 +15,15 @@ function saveCanvas(saveType, canvasId){
     saveBlob(blob, fileName);
 }
 
+function exportJsonData(jsonData) {
+    const fileName = 'data.json'
+    saveBlob(jsonToBlob(jsonData), fileName)
+}
+
+function jsonToBlob(jsonData) {
+    return new Blob([jsonData], {type: 'application\/json'});
+}
+
 // Base64データをBlobデータに変換
 function Base64toBlob(base64)
 {

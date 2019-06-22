@@ -4,23 +4,20 @@
 class Dancer {
     container = new createjs.Container()
     color = Color.gray
-    dragPointX = 0
-    dragPointY = 0
     shadows = []
     shadowsLine = []
     constructor(id, name, x, y) {
         this.id = id
         this.name = name
-        this.x = x
-        this.y = y
-        const scale = 10
+        const size = 10
+        this.move(x, y)
         const circle = new createjs.Shape();
-        circle.graphics.beginFill(this.color).drawCircle(x, y, scale)
-        circle.cache(this.x - scale, this.y - scale, this.x + scale, this.y + scale)
+        circle.graphics.beginFill(this.color).drawCircle(0, 0, size)
+        circle.cache(-size, -size, size * 2, size * 2)
 
         let nameText = new createjs.Text(name, "10px Arial", "brack")
-        nameText.x = x - 5
-        nameText.y = y - 5
+        nameText.x = -5
+        nameText.y = -5
         const circleIndex = 0
         const nameTextIndex = 1
 
@@ -32,18 +29,19 @@ class Dancer {
         this.container.addEventListener("pressup", this.handleUp)
     }
     handleDown = (event) => {
-        this.dragPointX = event.stageX - this.container.x
-        this.dragPointY = event.stageY - this.container.y
+        console.log(this)
     }
     handleMove = (event) => {
-        this.container.x = event.stageX - this.dragPointX
-        this.container.y = event.stageY - this.dragPointY
+        this.move(event.stageX, event.stageY)
     }
     handleUp = (event) => {
-        this.x = event.stageX
-        this.y = event.stageY
+        this.move(event.stageX, event.stageY)
     }
 
+    move(x, y) {
+        this.container.x = x
+        this.container.y = y
+    }
     setColor(color) {
         this.color = color
         const circleIndex = 0
@@ -57,14 +55,15 @@ class Dancer {
     addShadows() {
         const shadow = new createjs.Shape()
         const color = this.color.darker().semitransparent().rgba()
-        shadow.graphics.beginFill(color).drawCircle(this.x, this.y, 10)
-        shadow.cache(this.x - 10, this.y - 10, this.x + 10, this.y + 10)
+        const size = 10
+        shadow.graphics.beginFill(color).drawCircle(this.point.x, this.point.y, size)
+        shadow.cache(this.point.x - size, this.point.y - size, this.point.x + size, this.point.y + size)
         this.shadows.push(shadow)
         return shadow
     }
     tieShadows() {
          // FIXME: sliceはarrayの末尾アクセスのため。ぱっと見分からないからもう少しいいやり方ないかな...
-        const line = this.drawLine({x : this.x, y : this.y},
+        const line = this.drawLine(this.point,
              {x : this.shadows.slice(-1)[0].graphics.command.x, y : this.shadows.slice(-1)[0].graphics.command.y},
              this.color.darker().rgba())
         this.shadowsLine.push(line)
@@ -80,7 +79,7 @@ class Dancer {
         return line;
     }
     get point() {
-        return {x: this.x, y: this.y}
+        return {x: this.container.x, y: this.container.y}
     }
     get container() {
         return this.container
@@ -89,8 +88,8 @@ class Dancer {
         let dancerJsonData = {
             id : this.id,
             name : this.name,
-            x : this.x,
-            y : this.y,
+            x : this.point.x,
+            y : this.point.y,
             shadows : []
         }
         this.shadows.forEach(s => dancerJsonData.shadows.push({x: s.graphics.command.x, y: s.graphics.command.y}))

@@ -99,7 +99,7 @@ function handleMouseDown(event) {
     if(status.manipuration_mode === manipurationMode.MOVE){
         // マウスクリックした地点の踊り子の地点を影として記録する
         // 影が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-        dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChildAt(d.addShadows(), backgroud_index))
+        stage.addChildAt(dancerGroups.findDancer(event.stageX, event.stageY).addShadows(), backgroud_index)
     }
 }
 
@@ -107,7 +107,7 @@ function handleUp(event) {
     if(status.manipuration_mode === manipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
         // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-        dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChildAt(d.tieShadows(), backgroud_index))
+        stage.addChildAt(dancerGroups.findDancer(event.stageX, event.stageY).tieShadows(), backgroud_index)
     }
 }
 

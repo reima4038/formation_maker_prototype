@@ -118,7 +118,10 @@ class DancerGroup {
         this.dancers.filter(dancer => x >= dancer.point.x - 10 && x <= dancer.point.x + 10 &&
                 y >= dancer.point.y - 10 && y <= dancer.point.y + 10)
             .forEach(dancer => targets.push(dancer))
-        return {group_name: this.group_name, dancers: targets}
+        return {
+            group_name: this.group_name,
+            dancers: targets
+        }
     }
     get export() {
         let dancersJsonData = {
@@ -152,11 +155,11 @@ class DancerGroups {
     generateId() {
         return this.counter++
     }
-    findDancer(x, y, callbackFunction) {
+    findDancer(x, y) {
         return this.groups.flatMap(group => group.findDancer(x, y))
-        .filter(result => result.dancers.length > 0)
-        .map(result => result.dancers[0])
-        .forEach(callbackFunction)
+        .filter(result => result.dancers.length > 0) // これ以降は要素数1以上の配列に絞れる
+        .map(result => result.dancers)
+        .find(dancers => dancers)[0] // 配列の最初の要素を返す
     }
     staging(stage) {
         this.groups.flatMap(group => group.dancers)

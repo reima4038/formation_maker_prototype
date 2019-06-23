@@ -1,52 +1,49 @@
-    /**
-     * CreateJSのボタンを作成する関数です。
-     * この関数でボタンを作ったらステージに追加したり、クリックイベントを登録しましょう。
-     * @param {String} text ボタンのラベル文言です。
-     * @param {Number} width ボタンの横幅(単位はpx)です。
-     * @param {Number} height ボタンの高さ(単位はpx)です。
-     * @param {String} keyColor ボタンのキーカラーです。
-     * @returns {createjs.Container} ボタンの参照を返します。
-     */
-    function createButton(text, width, height, keyColor) {
-        // ボタン要素をグループ化
-        var button = new createjs.Container();
-        button.name = text; // ボタンに参考までに名称を入れておく(必須ではない)
-        button.cursor = "pointer"; // ホバー時にカーソルを変更する
-        // 通常時の座布団を作成
-        var bgUp = new createjs.Shape();
-        bgUp.graphics
-                .setStrokeStyle(1.0)
-                .beginStroke(keyColor)
-                .beginFill("white")
-                .drawRoundRect(0.5, 0.5, width - 1.0, height - 1.0, 4);
-        button.addChild(bgUp);
-        bgUp.visible = true; // 表示する
-        // ロールオーバー時の座布団を作成
-        var bgOver = new createjs.Shape();
-        bgOver.graphics
-                .beginFill(keyColor)
-                .drawRoundRect(0, 0, width, height, 4);
-        bgOver.visible = false; // 非表示にする
-        button.addChild(bgOver);
-        // ラベルを作成
-        var label = new createjs.Text(text, "14px sans-serif", keyColor);
-        label.x = width / 2;
-        label.y = height / 2;
-        label.textAlign = "center";
-        label.textBaseline = "middle";
-        button.addChild(label);
-        // ロールオーバーイベントを登録
-        button.addEventListener("mouseover", handleMouseOver);
-        button.addEventListener("mouseout", handleMouseOut);
-        function handleMouseOver(event) {
-          bgUp.visble = false;
-          bgOver.visible = true;
-          label.color = "white";
-        }
-        function handleMouseOut(event) {
-          bgUp.visble = true;
-          bgOver.visible = false;
-          label.color = keyColor;
-        }
-        return button;
-      }
+class Button {
+  container = new createjs.Container()
+  constructor(text, width, height, keyColor) {
+    this.container.name = text
+    this.container.cursor = 'pointer'
+    const bgUp = new createjs.Shape()
+    bgUp.graphics
+      .setStrokeStyle(1.0)
+      .beginStroke(keyColor)
+      .beginFill('white')
+      .drawRoundRect(0.5, 0.5, width - 1.0, height - 1.0, 4)
+    this.container.addChild(bgUp)
+    bgUp.visble = true
+    const bgOver = new createjs.Shape()
+    bgOver.graphics
+      .beginFill(keyColor)
+      .drawRoundRect(0, 0, width, height, 4)
+    bgOver.visible = false // 非表示にする
+    this.container.addChild(bgOver)
+    // ラベル
+    const label = new createjs.Text(text, "14px sans-serif", keyColor)
+    label.x = width / 2
+    label.y = height / 2
+    label.textAlign = "center"
+    label.textBaseline = "middle"
+    this.container.addChild(label)
+
+    // event listener
+    this.container.addEventListener("mouseover", event => this.bgUpVisible(bgUp, bgOver, label, 'white'))
+    this.container.addEventListener("mouseout", event => this.bgOverVisible(bgUp, bgOver, label, keyColor))
+  }
+  bgUpVisible(bgUp, bgOver, label, color) {
+    bgUp.visble = false
+    bgOver.visible = true
+    label.color = color
+  }
+  bgOverVisible(bgUp, bgOver, label, color) {
+    bgUp.visble = true
+    bgOver.visible = false
+    label.color = color
+  }
+  position(x, y) {
+    this.container.x = x
+    this.container.y = y
+  }
+  get container() {
+    return this.container
+  } 
+}

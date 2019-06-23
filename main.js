@@ -49,30 +49,26 @@ const button_size = {
     height : 40,
     gap : 10
 }
-const saveButton = createButton('Save', button_size.width, button_size.height, "#d9534f")
-saveButton.x = stage_size.width + button_size.gap
-saveButton.y = (button_size.height + button_size.gap) * 0
-stage.addChild(saveButton)
+const saveButton = new Button('Save', button_size.width, button_size.height, "#d9534f")
+saveButton.position(stage_size.width + button_size.gap, (button_size.height + button_size.gap) * 0)
+stage.addChild(saveButton.container)
 
-const refleshButton = createButton('Refresh', button_size.width, button_size.height, "#d9534f")
-refleshButton.x = stage_size.width + button_size.gap
-refleshButton.y = (button_size.height + button_size.gap) * 1
-stage.addChild(refleshButton)
+const refleshButton = new Button('Refresh', button_size.width, button_size.height, "#d9534f")
+refleshButton.position(stage_size.width + button_size.gap, (button_size.height + button_size.gap) * 1)
+stage.addChild(refleshButton.container)
 
-const exportButton = createButton('Export', button_size.width, button_size.height, "#d9534f")
-exportButton.x = stage_size.width + button_size.gap
-exportButton.y = (button_size.height + button_size.gap) * 2
-stage.addChild(exportButton)
+const exportButton = new Button('Export', button_size.width, button_size.height, "#d9534f")
+exportButton.position(stage_size.width + button_size.gap, (button_size.height + button_size.gap) * 2)
+stage.addChild(exportButton.container)
 
-const importButton = createButton('Import', button_size.width, button_size.height, "#d9534f")
-importButton.x = stage_size.width + button_size.gap
-importButton.y = (button_size.height + button_size.gap) * 3
-stage.addChild(importButton)
+const importButton = new Button('Import', button_size.width, button_size.height, "#d9534f")
+importButton.position(stage_size.width + button_size.gap, (button_size.height + button_size.gap) * 3)
+stage.addChild(importButton.container)
 
-saveButton.addEventListener("click", event => saveCanvas('png', target));
-refleshButton.addEventListener("click", event => location.reload());
-exportButton.addEventListener("click", event => exportJsonData(JSON.stringify(dancerGroups.export)));
-importButton.addEventListener("click", event => importData(successCallBack, () => {}));
+saveButton.container.addEventListener("click", event => saveCanvas('png', target));
+refleshButton.container.addEventListener("click", event => location.reload());
+exportButton.container.addEventListener("click", event => exportJsonData(JSON.stringify(dancerGroups.export)));
+importButton.container.addEventListener("click", event => importData(successCallBack, () => {}));
 
 const successCallBack = (file) => {
     const jsonData = JSON.parse(file)

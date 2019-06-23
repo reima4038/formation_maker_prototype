@@ -15,6 +15,7 @@ const showOpenFileDialog = () => {
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.json, application/json';
+            // XXX: ファイル選択ダイアログでファイルを選んでもonchangeが発火しない場合あり。なぜ？
             input.onchange = event => { 
                 resolve(event.target.files[0]);
             };

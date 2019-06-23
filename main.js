@@ -82,19 +82,33 @@ const successCallBack = (file) => {
 /*---------------------------
  * イベント
  *---------------------------*/
+
+const manipurationMode = {
+    PLACEMENT : 'placement',
+    MOVE : 'move'
+}
+
+const status = {
+    manipuration_mode : manipurationMode.PLACEMENT
+}
+
 stage.addEventListener("mousedown", handleMouseDown)
 stage.addEventListener("pressup", handleUp)
 
 function handleMouseDown(event) {
-    // マウスクリックした地点の踊り子の地点を影として記録する
-    // 影が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-    dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChildAt(d.addShadows(), backgroud_index))
+    if(status.manipuration_mode === manipurationMode.MOVE){
+        // マウスクリックした地点の踊り子の地点を影として記録する
+        // 影が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
+        dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChildAt(d.addShadows(), backgroud_index))
+    }
 }
 
 function handleUp(event) {
-    // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
-    // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-    dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChildAt(d.tieShadows(), backgroud_index))
+    if(status.manipuration_mode === manipurationMode.MOVE){
+        // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
+        // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
+        dancerGroups.findDancer(event.stageX, event.stageY, d => stage.addChildAt(d.tieShadows(), backgroud_index))
+    }
 }
 
 createjs.Ticker.addEventListener("tick", handleTick);

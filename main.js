@@ -26,6 +26,11 @@ const stage_size = {
 /*---------------------------
  * 背景
  *---------------------------*/
+// 背景
+const back_ground = new createjs.Shape()
+back_ground.graphics.beginFill('white')
+back_ground.graphics.rect(0, 0, stage_size.width, stage_size.height)
+stage.addChild(back_ground)
 
 // 枠線
 const frame_border = new FrameBorder(stage_size)

@@ -44,8 +44,6 @@ grid.staging(stage)
 
 const backgroud_index = grid.lastIndex(stage)
 
-const dancerGroups = new DancerGroups()
-
 /*---------------------------
  * ボタン類
  *---------------------------*/
@@ -83,6 +81,19 @@ const successCallBack = (file) => {
     })
     dancerGroups.staging(stage)
 }
+
+/*---------------------------
+ * リザーブ
+ *---------------------------*/
+
+const reserve_area = new createjs.Shape()
+reserve_area.graphics
+    .beginStroke('darkred')
+    .beginFill('white')
+    .rect(stage_size.width + 10, 200, 210, 400)
+stage.addChild(reserve_area)
+
+const dancerGroups = new DancerGroups()
 
 /*---------------------------
  * イベント

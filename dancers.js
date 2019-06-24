@@ -123,6 +123,9 @@ class DancerGroup {
             dancers: targets
         }
     }
+    removeAllDancers() {
+        this.dancers = []
+    }
     get export() {
         let dancersJsonData = {
             group_name : this.group_name,
@@ -156,14 +159,24 @@ class DancerGroups {
         return this.counter++
     }
     findDancer(x, y) {
-        return this.groups.flatMap(group => group.findDancer(x, y))
+        const foundDancer = this.groups.flatMap(group => group.findDancer(x, y))
         .filter(result => result.dancers.length > 0) // これ以降は要素数1以上の配列に絞れる
         .map(result => result.dancers)
-        .find(dancers => dancers)[0] // 配列の最初の要素を返す
+        .find(dancers => dancers) // 配列の最初の要素を返す
+        return foundDancer != null ? foundDancer[0] : null
     }
-    staging(stage) {
-        this.groups.flatMap(group => group.dancers)
-            .forEach(dancer => stage.addChild(dancer.container))
+    /**
+     * ステージング対象を取得する
+     */
+    staging() {
+        return this.groups.flatMap(group => group.dancers)
+            .map(d => d.container)
+    }
+    removeAllGroups() {
+        const targets = this.staging()
+        this.groups.forEach(g => g.removeAllDancers())
+        this.groups = []
+        return targets
     }
     get export() {
         let dancerGroupsJsonData = {

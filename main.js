@@ -74,12 +74,14 @@ exportButton.container.addEventListener("click", event => exportJsonData(JSON.st
 importButton.container.addEventListener("click", event => importData(successCallBack, () => {}));
 
 const successCallBack = (file) => {
-    const jsonData = JSON.parse(file)
+    const jsonData = JSON.parse(file)  
+
+    dancerGroups.removeAllGroups().forEach(d => stage.removeChild(d))
     jsonData.groups.forEach(g => {
         dancerGroups.addGroup(g.group_name, new ColorDefine(g.color.red, g.color.green, g.color.blue, g.color.alpha))
         g.dancers.forEach(d => dancerGroups.addDancer(g.group_name, d.name, d.x, d.y))
     })
-    dancerGroups.staging(stage)
+    dancerGroups.staging().forEach(d => stage.addChild(d))
 }
 
 /*---------------------------
@@ -92,6 +94,26 @@ reserve_area.graphics
     .beginFill('white')
     .rect(stage_size.width + 10, 200, 210, 400)
 stage.addChild(reserve_area)
+const reserve = []
+/**
+ * 横5列として左から並べた場合における、指定した順番のx, y座標を取得する
+ */ 
+function reservePosition(number) {
+    const column = 5
+    if(number > reserve.length) {
+        alert(`Error! : Number should be less than reserve size. number: ${number}, reserve.size: ${reserve.size}`)
+    } else {
+        const gap_px = 40
+        const origin = {
+            x: reserve_area.graphics.command.x + gap_px / 2,
+            y: reserve_area.graphics.command.y + gap_px / 2
+        }
+        return {
+            x: origin.x + gap_px * (number % column),
+            y: origin.y + gap_px * Math.floor(number / 5)
+        }
+    }
+}
 
 const dancerGroups = new DancerGroups()
 
@@ -100,8 +122,8 @@ const dancerGroups = new DancerGroups()
  *---------------------------*/
 
 const manipurationMode = {
-    PLACEMENT : 'placement',
-    MOVE : 'move'
+    PLACEMENT : 'placement', // 配置
+    MOVE : 'move', // 移動
 }
 
 const status = {
@@ -110,12 +132,15 @@ const status = {
 
 stage.addEventListener("mousedown", handleMouseDown)
 stage.addEventListener("pressup", handleUp)
-
+stage.addEventListener("dblclick", dblClick)
 function handleMouseDown(event) {
-    if(status.manipuration_mode === manipurationMode.MOVE){
+    if(status.manipuration_mode === manipurationMode.MOVE) {
         // マウスクリックした地点の踊り子の地点を影として記録する
         // 影が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-        stage.addChildAt(dancerGroups.findDancer(event.stageX, event.stageY).addShadows(), backgroud_index)
+        const foundDancer = dancerGroups.findDancer(event.stageX, event.stageY)
+        if(foundDancer != null) {
+            stage.addChildAt(foundDancer.addShadows(), backgroud_index)
+        }
     }
 }
 
@@ -123,7 +148,21 @@ function handleUp(event) {
     if(status.manipuration_mode === manipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
         // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-        stage.addChildAt(dancerGroups.findDancer(event.stageX, event.stageY).tieShadows(), backgroud_index)
+        const foundDancer = dancerGroups.findDancer(event.stageX, event.stageY)
+        if(foundDancer != null) {
+            stage.addChildAt(foundDancer.tieShadows(), backgroud_index)
+        }
+    }
+    // TODO: マウスを離したときにリザーブの中にいる踊り子の状態を反映する
+}
+
+function dblClick(event) {
+    // リザーブに送り込む
+    const dancer = dancerGroups.findDancer(event.stageX, event.stageY)
+    const position = reservePosition(reserve.length)
+    if(dancer != null && position != null) {
+        reserve.push(dancer)
+        dancer.move(position.x, position.y)
     }
 }
 

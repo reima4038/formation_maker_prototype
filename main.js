@@ -24,13 +24,24 @@ const stage_size = {
 }
 
 /*---------------------------
+ * コンテキスト
+ *---------------------------*/
+const manipurationMode = {
+    PLACEMENT : 'placement', // 配置
+    MOVE : 'move', // 移動
+}
+
+const ctx = {
+    manipuration_mode : manipurationMode.PLACEMENT,
+    dancer_groups : new DancerGroups()
+}
+
+/*---------------------------
  * 背景
  *---------------------------*/
 // 背景
-const back_ground = new createjs.Shape()
-back_ground.graphics.beginFill('white')
-back_ground.graphics.rect(0, 0, stage_size.width, stage_size.height)
-stage.addChild(back_ground)
+const back_ground = new BackGround(stage_size)
+back_ground.staging(stage)
 
 // 枠線
 const frame_border = new FrameBorder(stage_size)
@@ -70,74 +81,39 @@ stage.addChild(importButton.container)
 
 saveButton.container.addEventListener("click", event => saveCanvas('png', target));
 refleshButton.container.addEventListener("click", event => location.reload());
-exportButton.container.addEventListener("click", event => exportJsonData(JSON.stringify(dancerGroups.export)));
+exportButton.container.addEventListener("click", event => exportJsonData(JSON.stringify(dancer_groups.export)));
 importButton.container.addEventListener("click", event => importData(successCallBack, () => {}));
 
 const successCallBack = (file) => {
     const jsonData = JSON.parse(file)  
 
-    dancerGroups.removeAllGroups().forEach(d => stage.removeChild(d))
+    ctx.dancer_groups.removeAllGroups().forEach(d => stage.removeChild(d))
     jsonData.groups.forEach(g => {
-        dancerGroups.addGroup(g.group_name, new ColorDefine(g.color.red, g.color.green, g.color.blue, g.color.alpha))
-        g.dancers.forEach(d => dancerGroups.addDancer(g.group_name, d.name, d.x, d.y))
+        ctx.dancer_groups.addGroup(g.group_name, new ColorDefine(g.color.red, g.color.green, g.color.blue, g.color.alpha))
+        g.dancers.forEach(d => ctx.dancer_groups.addDancer(g.group_name, d.name, d.x, d.y))
     })
-    dancerGroups.staging().forEach(d => stage.addChild(d))
+    ctx.dancer_groups.staging().forEach(d => stage.addChild(d))
 }
 
 /*---------------------------
  * リザーブ
  *---------------------------*/
 
-const reserve_area = new createjs.Shape()
-reserve_area.graphics
-    .beginStroke('darkred')
-    .beginFill('white')
-    .rect(stage_size.width + 10, 200, 210, 400)
-stage.addChild(reserve_area)
-const reserve = []
-/**
- * 横5列として左から並べた場合における、指定した順番のx, y座標を取得する
- */ 
-function reservePosition(number) {
-    const column = 5
-    if(number > reserve.length) {
-        alert(`Error! : Number should be less than reserve size. number: ${number}, reserve.size: ${reserve.size}`)
-    } else {
-        const gap_px = 40
-        const origin = {
-            x: reserve_area.graphics.command.x + gap_px / 2,
-            y: reserve_area.graphics.command.y + gap_px / 2
-        }
-        return {
-            x: origin.x + gap_px * (number % column),
-            y: origin.y + gap_px * Math.floor(number / 5)
-        }
-    }
-}
-
-const dancerGroups = new DancerGroups()
+const reserve_area = new ReservationArea()
+stage.addChild(reserve_area.area)
 
 /*---------------------------
  * イベント
  *---------------------------*/
 
-const manipurationMode = {
-    PLACEMENT : 'placement', // 配置
-    MOVE : 'move', // 移動
-}
-
-const status = {
-    manipuration_mode : manipurationMode.PLACEMENT
-}
-
 stage.addEventListener("mousedown", handleMouseDown)
 stage.addEventListener("pressup", handleUp)
 stage.addEventListener("dblclick", dblClick)
 function handleMouseDown(event) {
-    if(status.manipuration_mode === manipurationMode.MOVE) {
+    if(ctx.manipuration_mode === manipurationMode.MOVE) {
         // マウスクリックした地点の踊り子の地点を影として記録する
         // 影が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-        const foundDancer = dancerGroups.findDancer(event.stageX, event.stageY)
+        const foundDancer = ctx.dancer_groups.findDancer(event.stageX, event.stageY)
         if(foundDancer != null) {
             stage.addChildAt(foundDancer.addShadows(), backgroud_index)
         }
@@ -145,10 +121,10 @@ function handleMouseDown(event) {
 }
 
 function handleUp(event) {
-    if(status.manipuration_mode === manipurationMode.MOVE){
+    if(ctx.manipuration_mode === manipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
         // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-        const foundDancer = dancerGroups.findDancer(event.stageX, event.stageY)
+        const foundDancer = ctx.dancer_groups.findDancer(event.stageX, event.stageY)
         if(foundDancer != null) {
             stage.addChildAt(foundDancer.tieShadows(), backgroud_index)
         }
@@ -158,10 +134,10 @@ function handleUp(event) {
 
 function dblClick(event) {
     // リザーブに送り込む
-    const dancer = dancerGroups.findDancer(event.stageX, event.stageY)
-    const position = reservePosition(reserve.length)
+    const dancer = ctx.dancer_groups.findDancer(event.stageX, event.stageY)
+    const position = reserve_area.reservePosition(reserve_area.reservers.length)
     if(dancer != null && position != null) {
-        reserve.push(dancer)
+        reserve_area.reservers.push(dancer)
         dancer.move(position.x, position.y)
     }
 }

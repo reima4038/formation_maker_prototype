@@ -1,3 +1,15 @@
+// 背景
+class BackGround {
+    back_ground = new createjs.Shape()
+    constructor(stage_size) {
+        this.back_ground.graphics.beginFill('white')
+        this.back_ground.graphics.rect(0, 0, stage_size.width, stage_size.height)
+    }
+    staging(stage) {
+        stage.addChild(this.back_ground)
+    }
+}
+
 // 背景：枠線
 class FrameBorder {
     frame_border
@@ -15,8 +27,8 @@ class FrameBorder {
             .lineTo(0, this.stage_size.height)
             .lineTo(0, 0)
     }
-    staging(stage, layer) {
-        stage.addChild(this.frame_border, layer)
+    staging(stage) {
+        stage.addChild(this.frame_border)
     }
 }
 

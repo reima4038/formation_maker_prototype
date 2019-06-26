@@ -55,6 +55,10 @@ grid.staging(stage)
 
 const backgroud_index = grid.lastIndex(stage)
 
+// リザーブエリア
+const reserve_area = new ReservationArea()
+stage.addChild(reserve_area.area)
+
 /*---------------------------
  * ボタン類
  *---------------------------*/
@@ -94,13 +98,6 @@ const successCallBack = (file) => {
     })
     ctx.dancer_groups.staging().forEach(d => stage.addChild(d))
 }
-
-/*---------------------------
- * リザーブ
- *---------------------------*/
-
-const reserve_area = new ReservationArea()
-stage.addChild(reserve_area.area)
 
 /*---------------------------
  * イベント

@@ -1,3 +1,6 @@
+/**
+ * ベースのボタンクラス
+ */
 class Button {
   container = new createjs.Container()
   constructor(text, width, height, keyColor) {
@@ -46,4 +49,46 @@ class Button {
   get container() {
     return this.container
   } 
+}
+
+/*---------------------------------
+ * 具象ボタン
+ *---------------------------------*/
+
+const button_size = {
+  width : 100,
+  height : 40,
+  gap : 10
+}
+
+class SaveButton extends Button {
+  constructor(stage_size_width, number, click_callback) {
+    super('Save', button_size.width, button_size.height, "#d9534f")
+    this.position(stage_size_width  + button_size.gap, (button_size.height + button_size.gap) * number)
+    this.container.addEventListener("click", click_callback)
+  }
+}
+
+class RefleshButton extends Button {
+  constructor(stage_size_width, number, click_callback) {
+    super('Refresh', button_size.width, button_size.height, "#d9534f")
+    this.position(stage_size_width  + button_size.gap, (button_size.height + button_size.gap) * number)
+    this.container.addEventListener("click", click_callback)
+  }
+}
+
+class ExportButton extends Button {
+  constructor(stage_size_width, number, click_callback) {
+    super('Export', button_size.width, button_size.height, "#d9534f")
+    this.position(stage_size_width  + button_size.gap, (button_size.height + button_size.gap) * number)
+    this.container.addEventListener("click", click_callback)
+  }
+}
+
+class ImportButton extends Button {
+  constructor(stage_size_width, number, click_callback) {
+    super('Import', button_size.width, button_size.height, "#d9534f")
+    this.position(stage_size_width  + button_size.gap, (button_size.height + button_size.gap) * number)
+    this.container.addEventListener("click", click_callback)
+  }
 }

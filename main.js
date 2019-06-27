@@ -59,31 +59,10 @@ stage.addChild(reserve_area.area)
 /*---------------------------
  * ボタン類
  *---------------------------*/
-const button_size = {
-    width : 100,
-    height : 40,
-    gap : 10
-}
-const saveButton = new Button('Save', button_size.width, button_size.height, "#d9534f")
-saveButton.position(stage_size.width + button_size.gap, (button_size.height + button_size.gap) * 0)
-stage.addChild(saveButton.container)
-
-const refleshButton = new Button('Refresh', button_size.width, button_size.height, "#d9534f")
-refleshButton.position(stage_size.width + button_size.gap, (button_size.height + button_size.gap) * 1)
-stage.addChild(refleshButton.container)
-
-const exportButton = new Button('Export', button_size.width, button_size.height, "#d9534f")
-exportButton.position(stage_size.width + button_size.gap, (button_size.height + button_size.gap) * 2)
-stage.addChild(exportButton.container)
-
-const importButton = new Button('Import', button_size.width, button_size.height, "#d9534f")
-importButton.position(stage_size.width + button_size.gap, (button_size.height + button_size.gap) * 3)
-stage.addChild(importButton.container)
-
-saveButton.container.addEventListener("click", event => saveCanvas('png', target));
-refleshButton.container.addEventListener("click", event => location.reload());
-exportButton.container.addEventListener("click", event => exportJsonData(JSON.stringify(dancer_groups.export)));
-importButton.container.addEventListener("click", event => importData(successCallBack, () => {}));
+stage.addChild(new SaveButton(stage_size.width, 0, event => saveCanvas('png', target)).container)
+stage.addChild(new RefleshButton(stage_size.width, 1, event => location.reload()).container)
+stage.addChild(new ImportButton(stage_size.width, 2, event => importData(successCallBack, () => {})).container)
+stage.addChild(new ExportButton(stage_size.width, 3, event => exportJsonData(JSON.stringify(ctx.dancer_groups.export))).container)
 
 const successCallBack = (file) => {
     const jsonData = JSON.parse(file)  

@@ -26,13 +26,10 @@ const stage_size = {
 /*---------------------------
  * コンテキスト
  *---------------------------*/
-const manipurationMode = {
-    PLACEMENT : 'placement', // 配置
-    MOVE : 'move', // 移動
-}
 
 const ctx = {
-    manipuration_mode : manipurationMode.PLACEMENT,
+    manipuration_mode : ManipurationMode.PLACEMENT,
+    pointer : initPointer(),
     dancer_groups : new DancerGroups()
 }
 
@@ -117,34 +114,26 @@ selected_area.graphics
 selected_area.visible = false
 stage.addChild(selected_area)
 
-// TODO: ポインター座標情報
-const point = {
-    click_x: 0,
-    click_y: 0,
-    drag_x: 0,
-    drag_y: 0
-}
-
 function handleMouseDown(event) {
     const foundDancer = ctx.dancer_groups.findDancer(event.stageX, event.stageY)
 
-    if(ctx.manipuration_mode === manipurationMode.PLACEMENT){
+    if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
         if(foundDancer) {
             foundDancer.selected()
         } else {
             ctx.dancer_groups.unSelect()
             // 選択領域
             if(selected_area.visible == false) {
-                point.click_x = event.stageX
-                point.click_y = event.stageY
+                ctx.pointer.click_x = event.stageX
+                ctx.pointer.click_y = event.stageY
                 selected_area.visible = true
                 selected_area.graphics
                     .clear()
                     .setStrokeStyle(1.0)
-                    .beginStroke('black').rect(point.click_x, point.click_y, 0, 0)
+                    .beginStroke('black').rect(ctx.pointer.click_x, ctx.pointer.click_y, 0, 0)
             }
         }
-    } else if(ctx.manipuration_mode === manipurationMode.MOVE) {
+    } else if(ctx.manipuration_mode === ManipurationMode.MOVE) {
         // マウスクリックした地点の踊り子の地点を影として記録する
         // 影が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
         if(foundDancer != null) {
@@ -156,33 +145,30 @@ function handleMouseDown(event) {
 function handleMove(event) {
     // 選択領域
     if(selected_area.visible == true) {
-        point.drag_x = event.stageX
-        point.drag_y = event.stageY
+        ctx.pointer.drag_x = event.stageX
+        ctx.pointer.drag_y = event.stageY
         selected_area.graphics
             .clear()
             .setStrokeStyle(1.0)
             .beginStroke('black')
-            .rect(point.click_x, point.click_y, point.drag_x - point.click_x, point.drag_y - point.click_y)
+            .rect(ctx.pointer.click_x, ctx.pointer.click_y, ctx.pointer.drag_x - ctx.pointer.click_x, ctx.pointer.drag_y - ctx.pointer.click_y)
     }
     
 }
 
 function handleUp(event) {
-    if(ctx.manipuration_mode === manipurationMode.PLACEMENT){
+    if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
         // 選択領域
         if(selected_area.visible == true) {
-            ctx.dancer_groups.select(point.click_x < point.drag_x ? point.click_x : point.drag_x,
-            point.click_y < point.drag_y ? point.click_y : point.drag_y,
-            point.click_x < point.drag_x ? point.drag_x - point.click_x : point.click_x - point.drag_x,
-            point.click_y < point.drag_y ? point.drag_y - point.click_y : point.click_y - point.drag_y)
-            point.click_x = 0
-            point.click_y = 0
-            point.drag_x = 0
-            point.drag_y = 0
+            ctx.dancer_groups.select(ctx.pointer.click_x < ctx.pointer.drag_x ? ctx.pointer.click_x : ctx.pointer.drag_x,
+            ctx.pointer.click_y < ctx.pointer.drag_y ? ctx.pointer.click_y : ctx.pointer.drag_y,
+            ctx.pointer.click_x < ctx.pointer.drag_x ? ctx.pointer.drag_x - ctx.pointer.click_x : ctx.pointer.click_x - ctx.pointer.drag_x,
+            ctx.pointer.click_y < ctx.pointer.drag_y ? ctx.pointer.drag_y - ctx.pointer.click_y : ctx.pointer.click_y - ctx.pointer.drag_y)
+            ctx.pointer = initPointer()
             selected_area.graphics.clear()
             selected_area.visible = false
         }
-    } else if(ctx.manipuration_mode === manipurationMode.MOVE){
+    } else if(ctx.manipuration_mode === ManipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
         // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
         const foundDancer = ctx.dancer_groups.findDancer(event.stageX, event.stageY)
@@ -194,8 +180,8 @@ function handleUp(event) {
 }
 
 function dblClick(event) {
-    point.click_x = event.stageX
-    point.click_y = event.stageY
+    ctx.pointer.click_x = event.stageX
+    ctx.pointer.click_y = event.stageY
     selected_area.graphics.clear()
     selected_area.visible = false
 

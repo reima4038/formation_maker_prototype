@@ -29,7 +29,7 @@ const stage_size = {
 
 const ctx = {
     manipuration_mode : ManipurationMode.PLACEMENT,
-    pointer : initPointer(),
+    pointer : new Pointer(),
     dancers : new DancerGroups()
 }
 
@@ -81,14 +81,8 @@ stage.addEventListener("pressmove", handleMove)
 stage.addEventListener("pressup", handleUp)
 stage.addEventListener("dblclick", dblClick)
 
-// 選択領域
-const selected_area = new createjs.Shape()
-selected_area.graphics
-    .setStrokeStyle(1.0)
-    .beginStroke('black')
-    .rect(0, 0, 0, 0)
-selected_area.visible = false
-stage.addChild(selected_area)
+const selected_area = new RectangleSelection()
+stage.addChild(selected_area.container)
 
 function handleMouseDown(event) {
     const foundDancer = ctx.dancers.findDancer(event.stageX, event.stageY)
@@ -99,14 +93,9 @@ function handleMouseDown(event) {
         } else {
             ctx.dancers.unSelect()
             // 選択領域
-            if(selected_area.visible == false) {
-                ctx.pointer.click_x = event.stageX
-                ctx.pointer.click_y = event.stageY
-                selected_area.visible = true
-                selected_area.graphics
-                    .clear()
-                    .setStrokeStyle(1.0)
-                    .beginStroke('black').rect(ctx.pointer.click_x, ctx.pointer.click_y, 0, 0)
+            if(selected_area.isVisible == false) {
+                ctx.pointer.click(event.stageX, event.stageY)
+                selected_area.draw(ctx.pointer.click_x, ctx.pointer.click_y, 0, 0)
             }
         }
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE) {
@@ -120,14 +109,10 @@ function handleMouseDown(event) {
 
 function handleMove(event) {
     // 選択領域
-    if(selected_area.visible == true) {
-        ctx.pointer.drag_x = event.stageX
-        ctx.pointer.drag_y = event.stageY
-        selected_area.graphics
-            .clear()
-            .setStrokeStyle(1.0)
-            .beginStroke('black')
-            .rect(ctx.pointer.click_x, ctx.pointer.click_y, ctx.pointer.drag_x - ctx.pointer.click_x, ctx.pointer.drag_y - ctx.pointer.click_y)
+    if(selected_area.isVisible == true) {
+        ctx.pointer.drag(event.stageX, event.stageY)
+        selected_area.draw(ctx.pointer.click_x, ctx.pointer.click_y,
+             ctx.pointer.drag_x - ctx.pointer.click_x, ctx.pointer.drag_y - ctx.pointer.click_y)
     }
     
 }
@@ -135,14 +120,10 @@ function handleMove(event) {
 function handleUp(event) {
     if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
         // 選択領域
-        if(selected_area.visible == true) {
-            ctx.dancers.select(ctx.pointer.click_x < ctx.pointer.drag_x ? ctx.pointer.click_x : ctx.pointer.drag_x,
-            ctx.pointer.click_y < ctx.pointer.drag_y ? ctx.pointer.click_y : ctx.pointer.drag_y,
-            ctx.pointer.click_x < ctx.pointer.drag_x ? ctx.pointer.drag_x - ctx.pointer.click_x : ctx.pointer.click_x - ctx.pointer.drag_x,
-            ctx.pointer.click_y < ctx.pointer.drag_y ? ctx.pointer.drag_y - ctx.pointer.click_y : ctx.pointer.click_y - ctx.pointer.drag_y)
-            ctx.pointer = initPointer()
-            selected_area.graphics.clear()
-            selected_area.visible = false
+        if(selected_area.isVisible == true) {
+            ctx.dancers.selectArea(ctx.pointer.selectArea)
+            ctx.pointer.init()
+            selected_area.hide()
         }
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
@@ -156,10 +137,8 @@ function handleUp(event) {
 }
 
 function dblClick(event) {
-    ctx.pointer.click_x = event.stageX
-    ctx.pointer.click_y = event.stageY
-    selected_area.graphics.clear()
-    selected_area.visible = false
+    ctx.pointer.click(event.stageX, event.stageY)
+    selected_area.hide()
 
     // リザーブに送り込む
     const dancer = ctx.dancers.findDancer(event.stageX, event.stageY)

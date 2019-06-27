@@ -202,6 +202,9 @@ class DancerGroups {
             this.groups.forEach(g => g.select(x, y, w, h))
         } 
     }
+    selectArea(area) {
+        this.select(area.x, area.y, area.w, area.h)
+    }
     unSelect() {
         this.groups.forEach(g => g.unSelect())
     }

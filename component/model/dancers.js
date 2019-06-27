@@ -11,17 +11,24 @@ class Dancer {
         this.name = name
         const size = 10
         this.move(x, y)
-        const circle = new createjs.Shape();
+        const circle = new createjs.Shape()
         circle.graphics.beginFill(this.color).drawCircle(0, 0, size)
         circle.cache(-size, -size, size * 2, size * 2)
+
+        const selectedCircle = new createjs.Shape()
+        selectedCircle.graphics.beginStroke(this.color).drawCircle(0, 0, size + 3)
+        selectedCircle.cache(-(size+3), -(size+3), (size+3)*2, (size+3)*2)
+        selectedCircle.visible = false
 
         let nameText = new createjs.Text(name, "10px Arial", "brack")
         nameText.x = -5
         nameText.y = -5
         const circleIndex = 0
-        const nameTextIndex = 1
+        const selectedCircleIndex = 1
+        const nameTextIndex = 2
 
         this.container.addChildAt(circle, circleIndex)
+        this.container.addChildAt(selectedCircle, selectedCircleIndex)
         this.container.addChildAt(nameText, nameTextIndex)
 
         this.container.addEventListener("mousedown", this.handleDown)
@@ -78,6 +85,14 @@ class Dancer {
             .lineTo(to.x, to.y)
         return line;
     }
+    selected() {
+        const selectedCicleIndex = 1
+        this.container.getChildAt(selectedCicleIndex).visible = true
+    }
+    unSelect() {
+        const selectedCicleIndex = 1
+        this.container.getChildAt(selectedCicleIndex).visible = false
+    }
     get point() {
         return {x: this.container.x, y: this.container.y}
     }
@@ -123,6 +138,15 @@ class DancerGroup {
             dancers: targets
         }
     }
+    select(x, y, w, h) {
+        this.dancers.filter(d => d.point.x >= x && d.point.x <= x + w &&
+            d.point.y <= y + h && d.point.y >= y)
+            .forEach(d => d.selected())
+    }
+    unSelect() {
+        this.dancers.forEach(d => d.unSelect())
+    }
+
     removeAllDancers() {
         this.dancers = []
     }
@@ -159,11 +183,21 @@ class DancerGroups {
         return this.counter++
     }
     findDancer(x, y) {
-        const foundDancer = this.groups.flatMap(group => group.findDancer(x, y))
+        const foundDancer = this.groups.flatMap(g => g.findDancer(x, y))
         .filter(result => result.dancers.length > 0) // これ以降は要素数1以上の配列に絞れる
         .map(result => result.dancers)
         .find(dancers => dancers) // 配列の最初の要素を返す
         return foundDancer != null ? foundDancer[0] : null
+    }
+    select(x, y, w, h) {
+        // 誤選択を防ぐため、閾値設定。また、通常選択されない値が入力されたときは処理を実行されない。
+        const threshold = 25
+        if(w * h > threshold && x != 0 && y != 0) {
+            this.groups.forEach(g => g.select(x, y, w, h))
+        } 
+    }
+    unSelect() {
+        this.groups.forEach(g => g.unSelect())
     }
     /**
      * ステージング対象を取得する

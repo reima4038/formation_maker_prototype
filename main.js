@@ -129,7 +129,9 @@ function handleMouseDown(event) {
     const foundDancer = ctx.dancer_groups.findDancer(event.stageX, event.stageY)
 
     if(ctx.manipuration_mode === manipurationMode.PLACEMENT){
-        if(foundDancer == null) {
+        if(foundDancer) {
+            foundDancer.selected()
+        } else {
             ctx.dancer_groups.unSelect()
             // 選択領域
             if(selected_area.visible == false) {

@@ -104,9 +104,36 @@ const successCallBack = (file) => {
  *---------------------------*/
 
 stage.addEventListener("mousedown", handleMouseDown)
+stage.addEventListener("pressmove", handleMove)
 stage.addEventListener("pressup", handleUp)
 stage.addEventListener("dblclick", dblClick)
+
+// 選択領域
+const selected_area = new createjs.Shape()
+selected_area.graphics
+    .setStrokeStyle(1.0)
+    .beginStroke('black')
+    .rect(0, 0, 0, 0)
+selected_area.visible = false
+stage.addChild(selected_area)
+
+// TODO: ポインター座標情報
+const point = {
+    click_x: 0,
+    click_y: 0,
+    drag_x: 0,
+    drag_y: 0
+}
+
 function handleMouseDown(event) {
+    point.click_x = event.stageX
+    point.click_y = event.stageY
+    selected_area.visible = true
+    selected_area.graphics
+        .clear()
+        .setStrokeStyle(1.0)
+        .beginStroke('black').rect(point.click_x, point.click_y, 0, 0)
+
     if(ctx.manipuration_mode === manipurationMode.MOVE) {
         // マウスクリックした地点の踊り子の地点を影として記録する
         // 影が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
@@ -117,7 +144,26 @@ function handleMouseDown(event) {
     }
 }
 
+function handleMove(event) {
+    // 選択領域
+    point.drag_x = event.stageX
+    point.drag_y = event.stageY
+    selected_area.graphics
+        .clear()
+        .setStrokeStyle(1.0)
+        .beginStroke('black')
+        .rect(point.click_x, point.click_y, point.drag_x - point.click_x, point.drag_y - point.click_y)
+    
+}
+
 function handleUp(event) {
+    point.click_x = 0
+    point.click_y = 0
+    point.drag_x = 0
+    point.drag_y = 0
+    selected_area.graphics.clear()
+    selected_area.visible = false
+
     if(ctx.manipuration_mode === manipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
         // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する

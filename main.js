@@ -30,15 +30,14 @@ const stage_size = {
 const ctx = {
     manipuration_mode : ManipurationMode.PLACEMENT,
     pointer : initPointer(),
-    dancer_groups : new DancerGroups()
+    dancers : new DancerGroups()
 }
 
 /*---------------------------
  * 背景
  *---------------------------*/
 // 背景
-const back_ground = new BackGround(stage_size)
-back_ground.staging(stage)
+new BackGround(stage_size).staging(stage)
 
 // 枠線
 const frame_border = new FrameBorder(stage_size)
@@ -56,23 +55,21 @@ const backgroud_index = grid.lastIndex(stage)
 const reserve_area = new ReservationArea()
 stage.addChild(reserve_area.area)
 
-/*---------------------------
- * ボタン類
- *---------------------------*/
+// ボタン類
 stage.addChild(new SaveButton(stage_size.width, 0, event => saveCanvas('png', target)).container)
 stage.addChild(new RefleshButton(stage_size.width, 1, event => location.reload()).container)
 stage.addChild(new ImportButton(stage_size.width, 2, event => importData(successCallBack, () => {})).container)
-stage.addChild(new ExportButton(stage_size.width, 3, event => exportJsonData(JSON.stringify(ctx.dancer_groups.export))).container)
+stage.addChild(new ExportButton(stage_size.width, 3, event => exportJsonData(JSON.stringify(ctx.dancers.export))).container)
 
 const successCallBack = (file) => {
     const jsonData = JSON.parse(file)  
 
-    ctx.dancer_groups.removeAllGroups().forEach(d => stage.removeChild(d))
+    ctx.dancers.removeAllGroups().forEach(d => stage.removeChild(d))
     jsonData.groups.forEach(g => {
-        ctx.dancer_groups.addGroup(g.group_name, new ColorDefine(g.color.red, g.color.green, g.color.blue, g.color.alpha))
-        g.dancers.forEach(d => ctx.dancer_groups.addDancer(g.group_name, d.name, d.x, d.y))
+        ctx.dancers.addGroup(g.group_name, new ColorDefine(g.color.red, g.color.green, g.color.blue, g.color.alpha))
+        g.dancers.forEach(d => ctx.dancers.addDancer(g.group_name, d.name, d.x, d.y))
     })
-    ctx.dancer_groups.staging().forEach(d => stage.addChild(d))
+    ctx.dancers.staging().forEach(d => stage.addChild(d))
 }
 
 /*---------------------------
@@ -94,13 +91,13 @@ selected_area.visible = false
 stage.addChild(selected_area)
 
 function handleMouseDown(event) {
-    const foundDancer = ctx.dancer_groups.findDancer(event.stageX, event.stageY)
+    const foundDancer = ctx.dancers.findDancer(event.stageX, event.stageY)
 
     if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
         if(foundDancer) {
             foundDancer.select()
         } else {
-            ctx.dancer_groups.unSelect()
+            ctx.dancers.unSelect()
             // 選択領域
             if(selected_area.visible == false) {
                 ctx.pointer.click_x = event.stageX
@@ -139,7 +136,7 @@ function handleUp(event) {
     if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
         // 選択領域
         if(selected_area.visible == true) {
-            ctx.dancer_groups.select(ctx.pointer.click_x < ctx.pointer.drag_x ? ctx.pointer.click_x : ctx.pointer.drag_x,
+            ctx.dancers.select(ctx.pointer.click_x < ctx.pointer.drag_x ? ctx.pointer.click_x : ctx.pointer.drag_x,
             ctx.pointer.click_y < ctx.pointer.drag_y ? ctx.pointer.click_y : ctx.pointer.drag_y,
             ctx.pointer.click_x < ctx.pointer.drag_x ? ctx.pointer.drag_x - ctx.pointer.click_x : ctx.pointer.click_x - ctx.pointer.drag_x,
             ctx.pointer.click_y < ctx.pointer.drag_y ? ctx.pointer.drag_y - ctx.pointer.click_y : ctx.pointer.click_y - ctx.pointer.drag_y)
@@ -150,7 +147,7 @@ function handleUp(event) {
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
         // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-        const foundDancer = ctx.dancer_groups.findDancer(event.stageX, event.stageY)
+        const foundDancer = ctx.dancers.findDancer(event.stageX, event.stageY)
         if(foundDancer != null) {
             stage.addChildAt(foundDancer.tieShadows(), backgroud_index)
         }
@@ -165,7 +162,7 @@ function dblClick(event) {
     selected_area.visible = false
 
     // リザーブに送り込む
-    const dancer = ctx.dancer_groups.findDancer(event.stageX, event.stageY)
+    const dancer = ctx.dancers.findDancer(event.stageX, event.stageY)
     const position = reserve_area.reservePosition(reserve_area.reservers.length)
     if(dancer != null && position != null) {
         reserve_area.reservers.push(dancer)

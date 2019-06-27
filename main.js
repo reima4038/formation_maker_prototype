@@ -119,7 +119,7 @@ function handleMouseDown(event) {
 
     if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
         if(foundDancer) {
-            foundDancer.selected()
+            foundDancer.select()
         } else {
             ctx.dancer_groups.unSelect()
             // 選択領域

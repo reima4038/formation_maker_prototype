@@ -6,6 +6,7 @@ class Dancer {
     color = Color.gray
     shadows = []
     shadowsLine = []
+    selected = false
     constructor(id, name, x, y) {
         this.id = id
         this.name = name
@@ -85,13 +86,18 @@ class Dancer {
             .lineTo(to.x, to.y)
         return line;
     }
-    selected() {
+    select() {
+        this.selected = true
         const selectedCicleIndex = 1
         this.container.getChildAt(selectedCicleIndex).visible = true
     }
     unSelect() {
+        this.selected = false
         const selectedCicleIndex = 1
         this.container.getChildAt(selectedCicleIndex).visible = false
+    }
+    get isSelected() {
+        return this.selected
     }
     get point() {
         return {x: this.container.x, y: this.container.y}
@@ -141,7 +147,7 @@ class DancerGroup {
     select(x, y, w, h) {
         this.dancers.filter(d => d.point.x >= x && d.point.x <= x + w &&
             d.point.y <= y + h && d.point.y >= y)
-            .forEach(d => d.selected())
+            .forEach(d => d.select())
     }
     unSelect() {
         this.dancers.forEach(d => d.unSelect())

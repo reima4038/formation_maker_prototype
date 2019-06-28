@@ -2,11 +2,11 @@
 class ReservationArea {
     area = new createjs.Shape()
     reservers = []
-    constructor() {
+    constructor(stage_size) {
         this.area.graphics
             .beginStroke('darkred')
             .beginFill('white')
-            .rect(stage_size.width + 10, 200, 210, 400)
+            .rect(stage_size.width + 10, 270, 210, 330)
     }
     get reservers() {
         return this.reservers

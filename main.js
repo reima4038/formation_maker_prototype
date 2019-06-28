@@ -62,7 +62,7 @@ grid.staging(stage)
 const backgroud_index = grid.lastIndex(stage)
 
 // リザーブエリア
-const reserve_area = new ReservationArea()
+const reserve_area = new ReservationArea(stage_size)
 stage.addChild(reserve_area.area)
 
 // ボタン類
@@ -70,7 +70,6 @@ stage.addChild(new SaveButton(stage_size.width, 0, event => saveCanvas('png', ta
 stage.addChild(new RefleshButton(stage_size.width, 1, event => location.reload()).container)
 stage.addChild(new ImportButton(stage_size.width, 2, event => importData(successCallBack, () => {})).container)
 stage.addChild(new ExportButton(stage_size.width, 3, event => exportJsonData(JSON.stringify(ctx.dancers.export))).container)
-
 const successCallBack = (file) => {
     const jsonData = JSON.parse(file)  
 
@@ -81,6 +80,39 @@ const successCallBack = (file) => {
     })
     ctx.dancers.staging().forEach(d => stage.addChild(d))
 }
+
+stage.addChild(new CollectVirticalButton(stage_size.width + button_size.width + button_size.gap, 0, event => alert('under construction')).container)
+stage.addChild(new CollectHorizonButton(stage_size.width + button_size.width + button_size.gap, 1, event => alert('under construction')).container)
+stage.addChild(new CollectRectangleButton(stage_size.width + button_size.width + button_size.gap, 2, event => alert('under construction')).container)
+stage.addChild(new ChangePlacesButton(stage_size.width + button_size.width + button_size.gap, 3, event => alert('under construction')).container)
+
+// 色変更
+const radius = 10
+const padding = 10
+const margin = radius * 2 + padding
+const color_change_icons_x = stage_size.width + radius + padding
+const color_change_icons_y = 200 + padding
+
+const color_change_text = new createjs.Text('選択中の踊り子の色を変更します', '14px Arial', 'brack')
+color_change_text.x = color_change_icons_x - padding
+color_change_text.y = color_change_icons_y
+stage.addChild(color_change_text)
+
+const coral = new createjs.Shape()
+coral.graphics.beginFill('coral')
+    .drawCircle(color_change_icons_x + margin * 0, color_change_icons_y + margin, radius)
+const mediumaquamarine = new createjs.Shape()
+mediumaquamarine.graphics.beginFill('mediumaquamarine')
+    .drawCircle(color_change_icons_x + margin * 1, color_change_icons_y + margin, radius)
+const skyblue = new createjs.Shape()
+skyblue.graphics.beginFill('skyblue')
+    .drawCircle(color_change_icons_x + margin * 2, color_change_icons_y + margin, radius)
+
+stage.addChild(coral)
+stage.addChild(mediumaquamarine)
+stage.addChild(skyblue)
+
+
 
 /*---------------------------
  * イベント

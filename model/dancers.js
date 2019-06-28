@@ -13,15 +13,15 @@ class Dancer {
     constructor(id, name, x, y) {
         this.id = id
         this.name = name
-        const size = 10
+        const radius = 10
         this.move(x, y)
         const circle = new createjs.Shape()
-        circle.graphics.beginFill(this.color).drawCircle(0, 0, size)
-        circle.cache(-size, -size, size * 2, size * 2)
+        circle.graphics.beginFill(this.color).drawCircle(0, 0, radius)
+        circle.cache(-radius, -radius, radius * 2, radius * 2)
 
         const selectedCircle = new createjs.Shape()
-        selectedCircle.graphics.beginStroke(this.color).drawCircle(0, 0, size + 3)
-        selectedCircle.cache(-(size+3), -(size+3), (size+3)*2, (size+3)*2)
+        selectedCircle.graphics.beginStroke(this.color).drawCircle(0, 0, radius + 3)
+        selectedCircle.cache(-(radius+3), -(radius+3), (radius+3)*2, (radius+3)*2)
         selectedCircle.visible = false
 
         let nameText = new createjs.Text(name, "10px Arial", "brack")
@@ -79,9 +79,9 @@ class Dancer {
     addShadows() {
         const shadow = new createjs.Shape()
         const color = this.color.darker().semitransparent().rgba()
-        const size = 10
-        shadow.graphics.beginFill(color).drawCircle(this.point.x, this.point.y, size)
-        shadow.cache(this.point.x - size, this.point.y - size, this.point.x + size, this.point.y + size)
+        const radius = 10
+        shadow.graphics.beginFill(color).drawCircle(this.point.x, this.point.y, radius)
+        shadow.cache(this.point.x - radius, this.point.y - radius, this.point.x + radius, this.point.y + radius)
         this.shadows.push(shadow)
         return shadow
     }

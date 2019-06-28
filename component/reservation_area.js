@@ -6,7 +6,7 @@ class ReservationArea {
         this.area.graphics
             .beginStroke('darkred')
             .beginFill('white')
-            .rect(stage_size.width + 10, 270, 210, 330)
+            .rect(stage_size.width + 10, 270, 210, 328)
     }
     get reservers() {
         return this.reservers

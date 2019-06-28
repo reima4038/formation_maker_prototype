@@ -14,6 +14,7 @@ class Pointer {
         this.drag_x = x
         this.drag_y = y
     }
+
     init() {
         this.click_x = 0
         this.click_y = 0
@@ -36,10 +37,22 @@ class Pointer {
         return {
             click_x: this.click_x,
             click_y: this.click_y,
-            drag_x: this.drag_y,
+            drag_x: this.drag_x,
             drag_y: this.drag_y
         }
     }
+    /**
+     * ドラッグした量を取得する
+     */
+    get dragDistance(){
+        return {
+            w: this.drag_x - this.click_x,
+            h: this.drag_y - this.click_y
+        }
+    }
+    /**
+     * ポインタで描いた矩形を取得する
+     */
     get selectArea() {
         return {
             x: this.click_x < this.drag_x ? this.click_x : this.drag_x,

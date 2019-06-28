@@ -88,16 +88,18 @@ function handleMouseDown(event) {
     const foundDancer = ctx.dancers.findDancer(event.stageX, event.stageY)
 
     if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
+        ctx.pointer.click(event.stageX, event.stageY)
         if(foundDancer) {
             foundDancer.select()
         } else {
             ctx.dancers.unSelect()
             // 選択領域
             if(selected_area.isVisible == false) {
-                ctx.pointer.click(event.stageX, event.stageY)
                 selected_area.draw(ctx.pointer.click_x, ctx.pointer.click_y, 0, 0)
             }
         }
+        ctx.dancers.selectedDancers()
+            .forEach(d => d.saveCurrentPosition())
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE) {
         // マウスクリックした地点の踊り子の地点を影として記録する
         // 影が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
@@ -108,11 +110,16 @@ function handleMouseDown(event) {
 }
 
 function handleMove(event) {
+    ctx.pointer.drag(event.stageX, event.stageY)
     // 選択領域
     if(selected_area.isVisible == true) {
-        ctx.pointer.drag(event.stageX, event.stageY)
         selected_area.draw(ctx.pointer.click_x, ctx.pointer.click_y,
              ctx.pointer.drag_x - ctx.pointer.click_x, ctx.pointer.drag_y - ctx.pointer.click_y)
+    } else {
+        const foundDancer = ctx.dancers.findDancer(event.stageX, event.stageY)
+        ctx.dancers.selectedDancers()
+            .filter(d => d.getId != foundDancer.getId)
+            .forEach(d => d.move(d.currentPosition.x + ctx.pointer.dragDistance.w, d.currentPosition.y + ctx.pointer.dragDistance.h))
     }
     
 }
@@ -122,9 +129,9 @@ function handleUp(event) {
         // 選択領域
         if(selected_area.isVisible == true) {
             ctx.dancers.selectArea(ctx.pointer.selectArea)
-            ctx.pointer.init()
             selected_area.hide()
         }
+        ctx.pointer.init()
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
         // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する

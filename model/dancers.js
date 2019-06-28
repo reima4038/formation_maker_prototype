@@ -7,6 +7,9 @@ class Dancer {
     shadows = []
     shadowsLine = []
     selected = false
+    // 選択時に他の踊り子と共連れて移動するための現在位置保持用フィールド
+    // FIXME:実際の現在位置を表すthis.contain.pointと混同しそうなので少し可読性をあげたい。
+    currentPosition = {x:0, y:0}
     constructor(id, name, x, y) {
         this.id = id
         this.name = name
@@ -45,10 +48,23 @@ class Dancer {
     handleUp = (event) => {
         this.move(event.stageX, event.stageY)
     }
-
+    /**
+     * 絶対座標で移動する。
+     * @param {number} x : 移動後のx座標
+     * @param {number} y : 移動後のy座標
+     */
     move(x, y) {
         this.container.x = x
         this.container.y = y
+    }
+    /**
+     * 相対値で移動する
+     * @param {number} w : x軸の移動量
+     * @param {number} h : y軸の移動量
+     */
+    relativeMove(w, h) {
+        this.container.x += w
+        this.container.y += h
     }
     setColor(color) {
         this.color = color
@@ -95,6 +111,15 @@ class Dancer {
         this.selected = false
         const selectedCicleIndex = 1
         this.container.getChildAt(selectedCicleIndex).visible = false
+    }
+    saveCurrentPosition() {
+        this.currentPosition = this.point
+    }
+    get getId() {
+        return this.id
+    }
+    get currentPosition() {
+        return this.currentPosition
     }
     get isSelected() {
         return this.selected
@@ -143,6 +168,9 @@ class DancerGroup {
             group_name: this.group_name,
             dancers: targets
         }
+    }
+    selectedDancers() {
+        return this.dancers.filter(d => d.isSelected == true)
     }
     select(x, y, w, h) {
         this.dancers.filter(d => d.point.x >= x && d.point.x <= x + w &&
@@ -194,6 +222,9 @@ class DancerGroups {
         .map(result => result.dancers)
         .find(dancers => dancers) // 配列の最初の要素を返す
         return foundDancer != null ? foundDancer[0] : null
+    }
+    selectedDancers() {
+        return this.groups.flatMap(g => g.selectedDancers())
     }
     select(x, y, w, h) {
         // 誤選択を防ぐため、閾値設定。また、通常選択されない値が入力されたときは処理を実行されない。

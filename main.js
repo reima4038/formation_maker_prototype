@@ -24,14 +24,24 @@ const stage_size = {
 }
 
 /*---------------------------
- * コンテキスト
+ * 隊列表コンテキスト
  *---------------------------*/
+class Context {
+    manipuration_mode = ManipurationMode.PLACEMENT
+    pointer = new Pointer()
+    dancers = new DancerGroups()
 
-const ctx = {
-    manipuration_mode : ManipurationMode.PLACEMENT,
-    pointer : new Pointer(),
-    dancers : new DancerGroups()
+    get manipuration_mode(){
+        return this.manipuration_mode
+    }
+    get pointer() {
+        return this.pointer
+    }
+    get dancers() {
+        return this.dancers
+    }
 }
+const ctx = new Context()
 
 /*---------------------------
  * 背景

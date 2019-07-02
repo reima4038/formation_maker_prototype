@@ -27,13 +27,18 @@ class ReservationArea {
     collectDancersWithinArea(dancers) {
         this.reflesh()
         dancers.filter(d => this.isInArea(d.point.x, d.point.y) == true)
+            .filter(d => this.reservers.map(d => d.getId).includes(d.getId) == false)
             .forEach(d => {
                 d.unSelect()
                 this.push(d)
             })
     }
     reflesh() {
-        this.reservers = []
+        if(this.reservers.length > 0) {
+            const detentions = this.reservers.filter(d => this.isInArea(d.point.x, d.point.y) == true)
+            this.reservers = []
+            detentions.forEach(d => this.push(d))
+        }
     }
     /**
      * エリア内に存在するか確認する

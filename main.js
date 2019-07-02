@@ -130,6 +130,10 @@ function handleMouseDown(event) {
     if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
         ctx.pointer.click(event.stageX, event.stageY)
         if(foundDancer) {
+            // 単独の踊り子を選択していた場合、非選択状態に戻す
+            if(ctx.dancers.selectedDancers.length == 1) {
+                ctx.dancers.unSelect()
+            }
             foundDancer.select()
         } else {
             ctx.dancers.unSelect()
@@ -167,6 +171,8 @@ function handleMove(event) {
 }
 
 function handleUp(event) {
+    const foundDancer = ctx.dancers.findDancer(event.stageX, event.stageY)
+
     if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
         // 選択領域
         if(selected_area.isVisible == true) {
@@ -180,7 +186,6 @@ function handleUp(event) {
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
         // 影を結ぶ線が背景のグリッドより手前、踊り子より奥に配置されるようにindexを設定する
-        const foundDancer = ctx.dancers.findDancer(event.stageX, event.stageY)
         if(foundDancer != null) {
             stage.addChildAt(foundDancer.tieShadows(), backgroud_index)
         }

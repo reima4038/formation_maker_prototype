@@ -172,7 +172,7 @@ function handleUp(event) {
             selected_area.hide()
         }
         //マウスを離したときにリザーブの中にいる踊り子の状態を反映する
-        reserve_area.update(ctx.dancers.allDancers)
+        reserve_area.collectDancersWithinArea(ctx.dancers.allDancers)
 
         ctx.pointer.init()
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE){

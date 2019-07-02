@@ -20,7 +20,11 @@ class ReservationArea {
     get area() {
         return this.area
     }
-    update(dancers) {
+    /**
+     * リザーバー枠内に存在する踊り子を整列させる
+     * @param {Dancer[]} dancers 
+     */
+    collectDancersWithinArea(dancers) {
         this.reflesh()
         dancers.filter(d => this.isInArea(d.point.x, d.point.y) == true)
             .forEach(d => this.push(d))

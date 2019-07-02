@@ -138,7 +138,7 @@ function handleMouseDown(event) {
                 selected_area.draw(ctx.pointer.click_x, ctx.pointer.click_y, 0, 0)
             }
         }
-        ctx.dancers.selectedDancers()
+        ctx.dancers.selectedDancers
             .forEach(d => d.saveCurrentPosition())
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE) {
         // マウスクリックした地点の踊り子の地点を影として記録する
@@ -157,9 +157,11 @@ function handleMove(event) {
              ctx.pointer.drag_x - ctx.pointer.click_x, ctx.pointer.drag_y - ctx.pointer.click_y)
     } else {
         const foundDancer = ctx.dancers.findDancer(event.stageX, event.stageY)
-        ctx.dancers.selectedDancers()
+        if(foundDancer != null) {
+            ctx.dancers.selectedDancers
             .filter(d => d.getId != foundDancer.getId)
             .forEach(d => d.move(d.currentPosition.x + ctx.pointer.dragDistance.w, d.currentPosition.y + ctx.pointer.dragDistance.h))
+        }
     }
     
 }

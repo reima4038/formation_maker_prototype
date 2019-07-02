@@ -226,7 +226,7 @@ class DancerGroups {
         .find(dancers => dancers) // 配列の最初の要素を返す
         return foundDancer != null ? foundDancer[0] : null
     }
-    selectedDancers() {
+    get selectedDancers() {
         return this.groups.flatMap(g => g.selectedDancers())
     }
     select(x, y, w, h) {

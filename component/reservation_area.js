@@ -27,7 +27,10 @@ class ReservationArea {
     collectDancersWithinArea(dancers) {
         this.reflesh()
         dancers.filter(d => this.isInArea(d.point.x, d.point.y) == true)
-            .forEach(d => this.push(d))
+            .forEach(d => {
+                d.unSelect()
+                this.push(d)
+            })
     }
     reflesh() {
         this.reservers = []

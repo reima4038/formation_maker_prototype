@@ -63,7 +63,7 @@ const backgroud_index = grid.lastIndex(stage)
 
 // リザーブエリア
 const reserve_area = new ReservationArea(stage_size)
-stage.addChild(reserve_area.area)
+stage.addChild(reserve_area.shape)
 
 // ボタン類
 stage.addChild(new SaveButton(stage_size.width, 0, event => saveCanvas('png', target)).container)
@@ -111,8 +111,6 @@ skyblue.graphics.beginFill('skyblue')
 stage.addChild(coral)
 stage.addChild(mediumaquamarine)
 stage.addChild(skyblue)
-
-
 
 /*---------------------------
  * イベント
@@ -173,6 +171,9 @@ function handleUp(event) {
             ctx.dancers.selectArea(ctx.pointer.selectArea)
             selected_area.hide()
         }
+        // TODO: マウスを離したときにリザーブの中にいる踊り子の状態を反映する
+
+
         ctx.pointer.init()
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE){
         // マウスを離した地点の踊り子と直前に出現した影を線で結ぶ
@@ -182,20 +183,12 @@ function handleUp(event) {
             stage.addChildAt(foundDancer.tieShadows(), backgroud_index)
         }
     }
-    // TODO: マウスを離したときにリザーブの中にいる踊り子の状態を反映する
 }
 
 function dblClick(event) {
     ctx.pointer.click(event.stageX, event.stageY)
     selected_area.hide()
-
-    // リザーブに送り込む
-    const dancer = ctx.dancers.findDancer(event.stageX, event.stageY)
-    const position = reserve_area.reservePosition(reserve_area.reservers.length)
-    if(dancer != null && position != null) {
-        reserve_area.reservers.push(dancer)
-        dancer.move(position.x, position.y)
-    }
+    reserve_area.push(ctx.dancers.findDancer(event.stageX, event.stageY))
 }
 
 createjs.Ticker.addEventListener("tick", handleTick);

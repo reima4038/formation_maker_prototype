@@ -1,9 +1,9 @@
 // リザーブエリア
 class ReservationArea {
-    area = new createjs.Shape()
+    shape = new createjs.Shape()
     reservers = []
     constructor(stage_size) {
-        this.area.graphics
+        this.shape.graphics
             .beginStroke('darkred')
             .beginFill('white')
             .rect(stage_size.width + 10, 270, 210, 328)
@@ -11,8 +11,15 @@ class ReservationArea {
     get reservers() {
         return this.reservers
     }
-    get area() {
-        return this.area
+    get shape() {
+        return this.shape
+    }
+    push(dancer) {
+        const position = this.reservePosition(reserve_area.reservers.length)
+        if(dancer != null && position != null) {
+            this.reservers.push(dancer)
+            dancer.move(position.x, position.y)
+        }
     }
     /**
      * 横5列として左から並べた場合における、指定した順番のx, y座標を取得する
@@ -24,8 +31,8 @@ class ReservationArea {
         } else {
             const gap_px = 40
             const origin = {
-                x: this.area.graphics.command.x + gap_px / 2,
-                y: this.area.graphics.command.y + gap_px / 2
+                x: this.shape.graphics.command.x + gap_px / 2,
+                y: this.shape.graphics.command.y + gap_px / 2
             }
             return {
                 x: origin.x + gap_px * (number % column),

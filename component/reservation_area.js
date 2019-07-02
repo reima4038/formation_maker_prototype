@@ -3,9 +3,11 @@ class ReservationArea {
     shape = new createjs.Shape()
     reservers = []
     area = { x: 0, y: 270, w: 210, h: 328 }
+    stage_size = {}
     constructor(stage_size) {
         const margin = 10
         this.area.x = stage_size.width + margin
+        this.stage_size = stage_size
         this.shape.graphics
             .beginStroke('darkred')
             .beginFill('white')
@@ -26,7 +28,7 @@ class ReservationArea {
      */
     collectDancersWithinArea(dancers) {
         this.reflesh()
-        dancers.filter(d => this.isInArea(d.point.x, d.point.y) == true)
+        dancers.filter(d => this.isOutOfStage(d.point.x, d.point.y) == true)
             .filter(d => this.reservers.map(d => d.getId).includes(d.getId) == false)
             .forEach(d => {
                 d.unSelect()
@@ -35,17 +37,19 @@ class ReservationArea {
     }
     reflesh() {
         if(this.reservers.length > 0) {
-            const detentions = this.reservers.filter(d => this.isInArea(d.point.x, d.point.y) == true)
+            const detentions = this.reservers.filter(d => this.isOutOfStage(d.point.x, d.point.y) == true)
             this.reservers = []
             detentions.forEach(d => this.push(d))
         }
     }
     /**
-     * エリア内に存在するか確認する
+     * ステージ外に存在するか確認する
+     * @param {number} x 
+     * @param {number} y 
      */
-    isInArea(x, y) {
-        return x > this.area.x && x < this.area.x + this.area.w
-            && y > this.area.y && y < this.area.y + this.area.h
+    isOutOfStage(x, y) {
+        return x > this.stage_size.width || x < 0
+            || y > this.stage_size.height || y < 0
     }
     push(dancer) {
         const position = this.reservePosition(reserve_area.reservers.length)

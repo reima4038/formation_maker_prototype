@@ -213,6 +213,9 @@ class DancerGroups {
     get groups() {
         return this.groups
     }
+    get allDancers() {
+        return this.groups.flatMap(g => g.dancers)
+    }
     generateId() {
         return this.counter++
     }

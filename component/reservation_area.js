@@ -2,17 +2,38 @@
 class ReservationArea {
     shape = new createjs.Shape()
     reservers = []
+    area = { x: 0, y: 270, w: 210, h: 328 }
     constructor(stage_size) {
+        const margin = 10
+        this.area.x = stage_size.width + margin
         this.shape.graphics
             .beginStroke('darkred')
             .beginFill('white')
-            .rect(stage_size.width + 10, 270, 210, 328)
+            .rect(this.area.x, this.area.y, this.area.w, this.area.h)
     }
     get reservers() {
         return this.reservers
     }
     get shape() {
         return this.shape
+    }
+    get area() {
+        return this.area
+    }
+    update(dancers) {
+        this.reflesh()
+        dancers.filter(d => this.isInArea(d.point.x, d.point.y) == true)
+            .forEach(d => this.push(d))
+    }
+    reflesh() {
+        this.reservers = []
+    }
+    /**
+     * エリア内に存在するか確認する
+     */
+    isInArea(x, y) {
+        return x > this.area.x && x < this.area.x + this.area.w
+            && y > this.area.y && y < this.area.y + this.area.h
     }
     push(dancer) {
         const position = this.reservePosition(reserve_area.reservers.length)

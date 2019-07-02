@@ -171,8 +171,8 @@ function handleUp(event) {
             ctx.dancers.selectArea(ctx.pointer.selectArea)
             selected_area.hide()
         }
-        // TODO: マウスを離したときにリザーブの中にいる踊り子の状態を反映する
-
+        //マウスを離したときにリザーブの中にいる踊り子の状態を反映する
+        reserve_area.update(ctx.dancers.allDancers)
 
         ctx.pointer.init()
     } else if(ctx.manipuration_mode === ManipurationMode.MOVE){
@@ -188,7 +188,6 @@ function handleUp(event) {
 function dblClick(event) {
     ctx.pointer.click(event.stageX, event.stageY)
     selected_area.hide()
-    reserve_area.push(ctx.dancers.findDancer(event.stageX, event.stageY))
 }
 
 createjs.Ticker.addEventListener("tick", handleTick);

@@ -108,6 +108,14 @@ const skyblue = new createjs.Shape()
 skyblue.graphics.beginFill('skyblue')
     .drawCircle(color_change_icons_x + margin * 2, color_change_icons_y + margin, radius)
 
+coral.addEventListener("mousedown", event => changeDancersGroup("front_group"))
+mediumaquamarine.addEventListener("mousedown", event => changeDancersGroup("mid_group"))
+skyblue.addEventListener("mousedown", event => changeDancersGroup("back_group"))
+
+function changeDancersGroup(group_name) {
+    ctx.dancers.selectedDancerChangeGroup(group_name)
+}
+
 stage.addChild(coral)
 stage.addChild(mediumaquamarine)
 stage.addChild(skyblue)
@@ -137,7 +145,7 @@ function handleMouseDown(event) {
             foundDancer.select()
         } else {
             ctx.dancers.unSelect()
-            // 選択領域
+            // 選択領域描画条件, TODO: 条件追加 ステージエリア or リザーブエリアの範囲内なら選択領域を描画する
             if(selected_area.isVisible == false) {
                 selected_area.draw(ctx.pointer.click_x, ctx.pointer.click_y, 0, 0)
             }

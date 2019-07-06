@@ -159,6 +159,9 @@ class DancerGroup {
     get dancers() {
         return this.dancers
     }
+    get groupName() {
+        return this.group_name
+    }
     findDancer(x, y) {
         let targets = []
         this.dancers.filter(dancer => x >= dancer.point.x - 10 && x <= dancer.point.x + 10 &&
@@ -180,7 +183,9 @@ class DancerGroup {
     unSelect() {
         this.dancers.forEach(d => d.unSelect())
     }
-
+    removeDancer(remove_dancer_id) {
+        this.dancers = this.dancers.filter(d => d.id != remove_dancer_id)
+    }
     removeAllDancers() {
         this.dancers = []
     }
@@ -242,6 +247,17 @@ class DancerGroups {
     unSelect() {
         this.groups.forEach(g => g.unSelect())
     }
+    selectedDancerChangeGroup(group_name) {
+        if(this.groups.filter(g => g.groupName == group_name).length <= 0) {
+            log.warn(`[Changing Group] Command Failed. Selected Dancer Group is not Found.`)
+        }
+        const selectedDancer = this.selectedDancers
+        this.groups.forEach(g => selectedDancer.map(d => d.id).forEach(id => g.removeDancer(id)))
+        this.groups.filter(g => g.groupName == group_name)
+            .forEach(g => selectedDancer.forEach(d => g.set(d)))
+
+    }
+
     /**
      * ステージング対象を取得する
      */

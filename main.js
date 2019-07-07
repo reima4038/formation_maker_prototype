@@ -181,7 +181,7 @@ stage.addChild(mediumaquamarine)
 stage.addChild(skyblue)
 
 /*---------------------------
- * イベント
+ * マウスイベント
  *---------------------------*/
 
 stage.addEventListener("mousedown", handleMouseDown)
@@ -266,6 +266,30 @@ function dblClick(event) {
     ctx.pointer.click(event.stageX, event.stageY)
     selected_area.hide()
 }
+
+/*--------------------------------
+ * キーボードイベント
+ *--------------------------------*/
+
+window.addEventListener("keydown", handleKeyDown);
+
+function handleKeyDown(event) {
+    const key = event.key;
+    switch(key) {
+        case 'm':
+            ctx.manipuration_mode = ManipurationMode.MOVE
+            break
+        case 'p':
+            // TODO: MOVEモードで作った影と軌跡は削除する 
+            ctx.manipuration_mode = ManipurationMode.PLACEMENT
+            break
+        default: 
+    }
+}
+
+/*--------------------------------
+ * 時間経過
+ *--------------------------------*/
 
 createjs.Ticker.addEventListener("tick", handleTick);
 function handleTick() {

@@ -88,10 +88,18 @@ class Dancer {
     tieShadows() {
          // FIXME: sliceはarrayの末尾アクセスのため。ぱっと見分からないからもう少しいいやり方ないかな...
         const line = this.drawLine(this.point,
-             {x : this.shadows.slice(-1)[0].graphics.command.x, y : this.shadows.slice(-1)[0].graphics.command.y},
-             this.color.darker().rgba())
+            {x : this.shadows.slice(-1)[0].graphics.command.x, y : this.shadows.slice(-1)[0].graphics.command.y},
+            this.color.darker().rgba())
         this.shadowsLine.push(line)
         return line
+    }
+    removeShadows() {
+        let removeTargets = []
+        removeTargets.push(this.shadows)
+        removeTargets.push(this.shadowsLine)
+        this.shadows = []
+        this.shadowsLine = []
+        return removeTargets
     }
     // TODO: 共通部品として外出し
     drawLine(from, to, color) {
@@ -220,6 +228,12 @@ class DancerGroups {
     }
     get allDancers() {
         return this.groups.flatMap(g => g.dancers)
+    }
+    removeAllDancersShadows() {
+        return this.allDancers.flatMap(d => d.removeShadows())
+            .filter(t => t.length > 0)
+            .flatMap(t => t)
+
     }
     generateId() {
         return this.counter++

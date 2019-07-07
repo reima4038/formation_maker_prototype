@@ -136,7 +136,7 @@ function changePlaces() {
     const selectedDancers = ctx.dancers.selectedDancers
     const count = selectedDancers != null ? selectedDancers.length : 0
     if(count != 2) {
-        alert('This command is uses in the state selected two dancers.')
+        alert('This command can uses in the state selected two dancers.')
         return
     }
     const dancerA = selectedDancers[0]
@@ -280,8 +280,8 @@ function handleKeyDown(event) {
             ctx.manipuration_mode = ManipurationMode.MOVE
             break
         case 'p':
-            // TODO: MOVEモードで作った影と軌跡は削除する 
             ctx.manipuration_mode = ManipurationMode.PLACEMENT
+            ctx.dancers.removeAllDancersShadows().forEach(t => stage.removeChild(t))
             break
         default: 
     }

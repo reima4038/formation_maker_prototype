@@ -93,7 +93,7 @@ stage.addChild(new ChangePlacesButton(stage_size.width + button_size.width + but
 function collectDancersToVirtical() {
     const selectedDancer = ctx.dancers.selectedDancers
     const origin = {x: 0, y: 0}
-    const originDancer = selectedDancer.reduce((a, b) => distanceFromOrigin(origin, a) > distanceFromOrigin(origin, b) ? a : b)
+    const originDancer = selectedDancer.reduce((a, b) => distanceFromOrigin(origin, a) > distanceFromOrigin(origin, b) ? b : a)
     const gridHeight = stage_size.height / grid_properties.y
     const collectYOrigin = (grid_properties.y / selectedDancer.length) / 2 * gridHeight
     const gridGapY = (grid_properties.y / selectedDancer.length) * gridHeight
@@ -103,7 +103,7 @@ function collectDancersToVirtical() {
 function collectDancersToHorizon() {
     const selectedDancer = ctx.dancers.selectedDancers
     const origin = {x: 0, y: 0}
-    const originDancer = selectedDancer.reduce((a, b) => distanceFromOrigin(origin, a) > distanceFromOrigin(origin, b) ? a : b)
+    const originDancer = selectedDancer.reduce((a, b) => distanceFromOrigin(origin, a) > distanceFromOrigin(origin, b) ? b : a)
     const gridWidth = stage_size.width / grid_properties.x
     const collectXOrigin = (grid_properties.x / selectedDancer.length) / 2 * gridWidth
     const gridGapX = (grid_properties.x / selectedDancer.length) * gridWidth

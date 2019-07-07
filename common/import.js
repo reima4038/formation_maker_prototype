@@ -23,7 +23,7 @@ const showOpenFileDialog = () => {
         } catch(err) {
             reject('reject show open file dialog')
         }
- 
+
     });
 };
 

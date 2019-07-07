@@ -305,6 +305,23 @@ class DancerPosition {
     v_position(position) {
         return this.stage_size.height / this.grid_column.virtical * position
     }
+    /**
+     * グリッド上のマス目を座標に変換する
+     * @param {number} gridX 
+     * @param {number} gridY 
+     */
+    gridToCoordinate(gridX, gridY) {
+        return {
+            x: this.h_position(gridX),
+            y: this.v_position(gridY)
+        }
+    }
+    get oneGridWidth() {
+        return this.stage_size.width / this.grid_column.horizontal
+    }
+    get oneGridHeight() {
+        return this.stage_size.height / this.grid_column.virtical
+    }
     get definedPosition() {
         return {
             h_four_column_outer_left : this.h_position(2),

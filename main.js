@@ -23,6 +23,10 @@ const stage_size = {
     height : grid_properties.y * grid_properties.size * grid_properties.scale
 }
 
+function isInStageArea(x, y) {
+    return x > 0 && x < stage_size.width && y > 0 && y < stage_size.height
+}
+
 /*---------------------------
  * 隊列表コンテキスト
  *---------------------------*/
@@ -81,10 +85,48 @@ const successCallBack = (file) => {
     ctx.dancers.staging().forEach(d => stage.addChild(d))
 }
 
-stage.addChild(new CollectVirticalButton(stage_size.width + button_size.width + button_size.gap, 0, event => alert('under construction')).container)
-stage.addChild(new CollectHorizonButton(stage_size.width + button_size.width + button_size.gap, 1, event => alert('under construction')).container)
-stage.addChild(new CollectRectangleButton(stage_size.width + button_size.width + button_size.gap, 2, event => alert('under construction')).container)
-stage.addChild(new ChangePlacesButton(stage_size.width + button_size.width + button_size.gap, 3, event => alert('under construction')).container)
+stage.addChild(new CollectVirticalButton(stage_size.width + button_size.width + button_size.gap, 0, event => collectDancersToVirtical()).container)
+stage.addChild(new CollectHorizonButton(stage_size.width + button_size.width + button_size.gap, 1, event => collectDancersToHorizon()).container)
+stage.addChild(new CollectRectangleButton(stage_size.width + button_size.width + button_size.gap, 2, event => collectDancersToRectangle()).container)
+stage.addChild(new ChangePlacesButton(stage_size.width + button_size.width + button_size.gap, 3, event => changePlaces()).container)
+
+function collectDancersToVirtical() {
+    // TODO: 選択した踊り子を抽出する
+    // TODO: 選択した踊り子のなかで一番原点(0, 0)に近い踊り子を特定する
+    // TODO: 選択した踊り子全員のX座標を原点に近い踊り子と同じ値に設定する
+    // TODO: 選択した踊り子全員のY座標を原点に近い踊り子からグリッド３マス分 * n ( 0 < n < 選択した踊り子の数 -1) に設定する
+    alert('under construction')
+}
+
+function collectDancersToHorizon() {
+    // TODO: 選択した踊り子を抽出する
+    // TODO: 選択した踊り子のなかで一番原点(0, 0)に近い踊り子を特定する
+    // TODO: 選択した踊り子全員のX座標をステージ幅のグリッドで一定間隔になるように設定する。（4列だと2, 6, 10, 14）
+    // TODO: 選択した踊り子全員のY座標を原点に近い踊り子と同じ値に設定する
+    alert('under construction')
+}
+
+/**
+ * 4列N行の四角形に配置する。
+ * 原点をグリッドの(2, 2)とし、そこから右に4マスずつ配置する。
+ * 4人並んだら次の行とする。
+ */
+function collectDancersToRectangle() {
+    const dp = new DancerPosition(stage_size, grid_properties.x, grid_properties.y)
+    const origin = dp.gridToCoordinate(2, 2)
+    const grid_gap_x = 4
+    const grid_gap_y = 3
+    const column = 4
+    ctx.dancers.selectedDancers.forEach((d, i) => {
+        console.log('in')
+        d.move(origin.x + dp.oneGridWidth * grid_gap_x * (i % column),
+         origin.y + dp.oneGridHeight * grid_gap_y * Math.floor(i / column))
+    })
+}
+
+function changePlaces() {
+    alert('under construction')
+}
 
 // 色変更
 const radius = 10
@@ -137,13 +179,15 @@ function handleMouseDown(event) {
 
     if(ctx.manipuration_mode === ManipurationMode.PLACEMENT){
         ctx.pointer.click(event.stageX, event.stageY)
-        if(foundDancer) {
+        if(foundDancer && (isInStageArea(event.stageX, event.stageY) ||
+            reserve_area.isInReservationArea(event.stageX, event.stageY))) {
             // 単独の踊り子を選択していた場合、非選択状態に戻す
             if(ctx.dancers.selectedDancers.length == 1) {
                 ctx.dancers.unSelect()
             }
             foundDancer.select()
-        } else {
+        } else if(isInStageArea(event.stageX, event.stageY) ||
+            reserve_area.isInReservationArea(event.stageX, event.stageY)){
             ctx.dancers.unSelect()
             // 選択領域描画条件, TODO: 条件追加 ステージエリア or リザーブエリアの範囲内なら選択領域を描画する
             if(selected_area.isVisible == false) {
@@ -166,7 +210,7 @@ function handleMove(event) {
     // 選択領域
     if(selected_area.isVisible == true) {
         selected_area.draw(ctx.pointer.click_x, ctx.pointer.click_y,
-             ctx.pointer.drag_x - ctx.pointer.click_x, ctx.pointer.drag_y - ctx.pointer.click_y)
+            ctx.pointer.drag_x - ctx.pointer.click_x, ctx.pointer.drag_y - ctx.pointer.click_y)
     } else {
         const foundDancer = ctx.dancers.findDancer(event.stageX, event.stageY)
         if(foundDancer != null) {

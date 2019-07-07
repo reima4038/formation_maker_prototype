@@ -22,6 +22,10 @@ class ReservationArea {
     get area() {
         return this.area
     }
+    isInReservationArea(x, y) {
+        return x > this.area.x && x < this.area.x + this.area.w
+            && y > this.area.y && y < this.area.y + this.area.h
+    }
     /**
      * リザーバー枠内に存在する踊り子を整列させる
      * @param {Dancer[]} dancers 
@@ -73,7 +77,7 @@ class ReservationArea {
             }
             return {
                 x: origin.x + gap_px * (number % column),
-                y: origin.y + gap_px * Math.floor(number / 5)
+                y: origin.y + gap_px * Math.floor(number / column)
             }
         }
     }

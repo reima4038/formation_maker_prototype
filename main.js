@@ -127,7 +127,6 @@ function collectDancersToRectangle() {
     const grid_gap_y = 3
     const column = 4
     ctx.dancers.selectedDancers.forEach((d, i) => {
-        console.log('in')
         d.move(origin.x + dp.oneGridWidth * grid_gap_x * (i % column),
          origin.y + dp.oneGridHeight * grid_gap_y * Math.floor(i / column))
     })

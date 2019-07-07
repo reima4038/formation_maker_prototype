@@ -91,19 +91,28 @@ stage.addChild(new CollectRectangleButton(stage_size.width + button_size.width +
 stage.addChild(new ChangePlacesButton(stage_size.width + button_size.width + button_size.gap, 3, event => changePlaces()).container)
 
 function collectDancersToVirtical() {
-    // TODO: 選択した踊り子を抽出する
-    // TODO: 選択した踊り子のなかで一番原点(0, 0)に近い踊り子を特定する
-    // TODO: 選択した踊り子全員のX座標を原点に近い踊り子と同じ値に設定する
-    // TODO: 選択した踊り子全員のY座標を原点に近い踊り子からグリッド３マス分 * n ( 0 < n < 選択した踊り子の数 -1) に設定する
-    alert('under construction')
+    const selectedDancer = ctx.dancers.selectedDancers
+    const origin = {x: 0, y: 0}
+    const originDancer = selectedDancer.reduce((a, b) => distanceFromOrigin(origin, a) > distanceFromOrigin(origin, b) ? a : b)
+    const gridHeight = stage_size.height / grid_properties.y
+    const collectYOrigin = (grid_properties.y / selectedDancer.length) / 2 * gridHeight
+    const gridGapY = (grid_properties.y / selectedDancer.length) * gridHeight
+    selectedDancer.forEach((d, i) => d.move(originDancer.point.x, collectYOrigin + (gridGapY * i)))
 }
 
 function collectDancersToHorizon() {
-    // TODO: 選択した踊り子を抽出する
-    // TODO: 選択した踊り子のなかで一番原点(0, 0)に近い踊り子を特定する
-    // TODO: 選択した踊り子全員のX座標をステージ幅のグリッドで一定間隔になるように設定する。（4列だと2, 6, 10, 14）
-    // TODO: 選択した踊り子全員のY座標を原点に近い踊り子と同じ値に設定する
-    alert('under construction')
+    const selectedDancer = ctx.dancers.selectedDancers
+    const origin = {x: 0, y: 0}
+    const originDancer = selectedDancer.reduce((a, b) => distanceFromOrigin(origin, a) > distanceFromOrigin(origin, b) ? a : b)
+    const gridWidth = stage_size.width / grid_properties.x
+    const collectXOrigin = (grid_properties.x / selectedDancer.length) / 2 * gridWidth
+    const gridGapX = (grid_properties.x / selectedDancer.length) * gridWidth
+    selectedDancer.forEach((d, i) => d.move(collectXOrigin + (gridGapX * i) , originDancer.point.y))
+}
+
+// FIXME: Util化していい類の共通関数
+function distanceFromOrigin(a, b) {
+    return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2))
 }
 
 /**
@@ -125,7 +134,17 @@ function collectDancersToRectangle() {
 }
 
 function changePlaces() {
-    alert('under construction')
+    const selectedDancers = ctx.dancers.selectedDancers
+    const count = selectedDancers != null ? selectedDancers.length : 0
+    if(count != 2) {
+        alert('This command is uses in the state selected two dancers.')
+        return
+    }
+    const dancerA = selectedDancers[0]
+    const dancerB = selectedDancers[1]
+    const tempPoint = dancerA.point
+    dancerA.move(dancerB.point.x, dancerB.point.y)
+    dancerB.move(tempPoint.x, tempPoint.y)
 }
 
 // 色変更
